@@ -1,0 +1,41 @@
+name: 'Prepare Lando Plugin'
+description: 'Prepare a Lando plugin for publishing to a package registry.'
+inputs:
+  tag:  # id of input
+    description: 'The new tag of the plugin to be published.'
+    required: false
+    default: ${{ github.event.release.tag_name }}
+  commit-username:
+    description: 'Username used when committing the newly bumped version of the plugin.'
+    required: false
+    default: 'github-actions'
+  commit-email:
+    description: 'Email used when committing the newly bumped version of the plugin.'
+    required: false
+    default: 'github-actions@github.com'
+runs:
+  using: "composite"
+  steps:
+    - name: Set up Node.js
+      uses: actions/setup-node@v2
+      with:
+        node-version: '16'
+    - name: Validate Plugin
+      run: |
+        node validate-lando-plugin.js
+    - name: Install Dependencies
+      run: |
+        yarn install -g bundle-dependencies@1.0.2
+        yarn install -g version-bump-prompt@6.1.0
+    - name: Bump Release
+      run: |
+        git config user.name github-actions
+        git config user.email github-actions@github.com
+        git checkout ${{ github.event.release.target_commitish }}
+        yarn run bundle-dependencies update
+        yarn run bump "${{ github.event.release.tag_name }}" --commit
+        git push origin ${{ github.event.release.target_commitish }}
+        git tag -f ${{ github.event.release.tag_name }} $(git log --pretty=format:'%h' -n 1)
+        git push --force origin ${{ github.event.release.tag_name }}
+        echo "Bumped package version to ${{ github.event.release.tag_name }} with the following bundled dependencies:"
+        yarn run bundle-dependencies list-bundled-dependencies
