@@ -25,9 +25,6 @@ inputs:
     description: 'Location of package.json for the project to be prepared.'
     required: false
     default: '${{ github.workspace }}/package.json'
-defaults:
-  run:
-    shell: bash
   
 runs:
   using: "composite"
@@ -44,30 +41,35 @@ runs:
         script: ${{ github.action_path }}/validate-pjson.js 
     - name: Validate Plugin
       if: ${{ inputs.validate-plugin == 'true' }}
-      uses: actions/github-script
+      uses: actions/github-script@v6
       env:
         PJSON_LOCATION: ${{ inputs.pjson-location }}
       with:
         script: ${{ github.action_path }}/validate-lando-plugin.js 
     - name: Install Dependencies
+      shell: bash 
       run: |
         yarn install -g bundle-dependencies@1.0.2
         yarn install -g version-bump-prompt@6.1.0
     - name: Checkout Code
+      shell: bash 
       run: |
         git fetch --unshallow && git fetch --all
         git config user.name ${{ inputs.git-username }}
         git config user.email ${{ inputs.git-email }}
         git checkout ${{ github.event.release.target_commitish }}
     - name: Bundle dependencies
+      shell: bash 
       if: ${{ inputs.bundle-deps == 'true' }}
       run: |
         yarn run bundle-dependencies update
     - name: Bump Version and Push 
+      shell: bash 
       run: |
         yarn run bump "${{ github.event.release.tag_name }}" --commit
         git push origin ${{ github.event.release.target_commitish }}
     - name: Retag Release
+      shell: bash 
       run: |
         TAGS=${{ inputs.tags }}
         IFS=',' read -ra TAG_ARRAY <<< "$TAGS"
@@ -77,6 +79,7 @@ runs:
           git push --force origin ${{ github.event.release.tag_name }}
         done
     - name: Output
+      shell: bash 
       run: |
         echo "Bumped package version to ${{ github.event.release.tag_name }} with the following bundled dependencies:"
         yarn run bundle-dependencies list-bundled-dependencies
