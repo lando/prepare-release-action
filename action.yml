@@ -25,8 +25,9 @@ inputs:
     description: 'Location of package.json for the project to be prepared.'
     required: false
     default: '${{ github.workspace }}/package.json'
-env:
-  PJSON_LOCATION: ${{ inputs.pjson-location }}
+defaults:
+  run:
+    shell: bash
   
 runs:
   using: "composite"
@@ -36,12 +37,16 @@ runs:
       with:
         node-version: '16'
     - name: Validate package.json
-      uses: actions/github-script
+      uses: actions/github-script@v6
+      env:
+        PJSON_LOCATION: ${{ inputs.pjson-location }}
       with:
         script: ${{ github.action_path }}/validate-pjson.js 
     - name: Validate Plugin
       if: ${{ inputs.validate-plugin == 'true' }}
       uses: actions/github-script
+      env:
+        PJSON_LOCATION: ${{ inputs.pjson-location }}
       with:
         script: ${{ github.action_path }}/validate-lando-plugin.js 
     - name: Install Dependencies
