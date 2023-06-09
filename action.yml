@@ -1,18 +1,33 @@
 name: 'Prepare Lando Plugin'
 description: 'Prepare a Lando plugin for publishing to a package registry.'
 inputs:
-  tag:  # id of input
+  tags:  # id of input
     description: 'The new tag of the plugin to be published.'
     required: false
     default: ${{ github.event.release.tag_name }}
-  commit-username:
+  git-username:
     description: 'Username used when committing the newly bumped version of the plugin.'
     required: false
     default: 'github-actions'
-  commit-email:
+  git-email:
     description: 'Email used when committing the newly bumped version of the plugin.'
     required: false
     default: 'github-actions@github.com'
+  validate-plugin:
+    description: 'Whether to validate the checked out code as a Lando plugin.'
+    required: false
+    default: true
+  bundle-deps: 
+    description: 'Whether to bundle-dependencies.'
+    required: false
+    default: true
+  pjson-location:
+    description: 'Location of package.json for the project to be prepared.'
+    required: false
+    default: '${{ github.workspace }}/package.json'
+env:
+  PJSON_LOCATION: ${{ inputs.pjson-location }}
+  
 runs:
   using: "composite"
   steps:
@@ -20,22 +35,43 @@ runs:
       uses: actions/setup-node@v2
       with:
         node-version: '16'
+    - name: Validate package.json
+      uses: actions/github-script
+      with:
+        script: ${{ github.action_path }}/validate-pjson.js 
     - name: Validate Plugin
-      run: |
-        node validate-lando-plugin.js
+      if: ${{ inputs.validate-plugin == 'true' }}
+      uses: actions/github-script
+      with:
+        script: ${{ github.action_path }}/validate-lando-plugin.js 
     - name: Install Dependencies
       run: |
         yarn install -g bundle-dependencies@1.0.2
         yarn install -g version-bump-prompt@6.1.0
-    - name: Bump Release
+    - name: Checkout Code
       run: |
-        git config user.name github-actions
-        git config user.email github-actions@github.com
+        git fetch --unshallow && git fetch --all
+        git config user.name ${{ inputs.git-username }}
+        git config user.email ${{ inputs.git-email }}
         git checkout ${{ github.event.release.target_commitish }}
+    - name: Bundle dependencies
+      if: ${{ inputs.bundle-deps == 'true' }}
+      run: |
         yarn run bundle-dependencies update
+    - name: Bump Version and Push 
+      run: |
         yarn run bump "${{ github.event.release.tag_name }}" --commit
         git push origin ${{ github.event.release.target_commitish }}
-        git tag -f ${{ github.event.release.tag_name }} $(git log --pretty=format:'%h' -n 1)
-        git push --force origin ${{ github.event.release.tag_name }}
+    - name: Retag Release
+      run: |
+        TAGS=${{ inputs.tags }}
+        IFS=',' read -ra TAG_ARRAY <<< "$TAGS"
+
+        for tag in "${TAG_ARRAY[@]}"; do
+          git tag -f ${{ github.event.release.tag_name }} $(git log --pretty=format:'%h' -n 1)
+          git push --force origin ${{ github.event.release.tag_name }}
+        done
+    - name: Output
+      run: |
         echo "Bumped package version to ${{ github.event.release.tag_name }} with the following bundled dependencies:"
         yarn run bundle-dependencies list-bundled-dependencies

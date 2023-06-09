@@ -1,0 +1,26 @@
+name: Release 
+
+on:
+  release:
+    types:
+      - published
+
+jobs:
+  deploy:
+    runs-on: ubuntu-22.04
+    env:
+      TERM: xterm
+      PRERELEASE_TAG: edge
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      # Bump the release in code, dogfooding this plugin.
+      - name: Bump release
+        uses: ./
+        with:
+          tag: |
+            'v1'
+            ${{ github.event.release.tag_name }}

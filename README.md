@@ -15,11 +15,16 @@ Basic action to prepare a Lando plugin for publishing to a package registry like
           tag: ${{ github.event.release.tag_name }}
           commit-username: 'github-actions'
           commit-email: 'github-actions@github.com'
+          lando-plugin: true
 ```
+
+## Warnings
+
+We do expand the initial shallow clone that's the default for `actions/checkout` to a full clone in order to re-commit the "bumped" version of your plugin.
 
 Usage assumes that the action is being used in a workflow that checks out a Lando plugin's code. See usage in the [`lando/plugin-test`](https://github.com/lando/plugin-test/blob/main/.github/workflows/release.yml) plugin's release workflow.
 
-Example Workflow:
+## Example Workflow:
 
 ```
 name: Publish to NPM
