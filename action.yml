@@ -67,6 +67,7 @@ runs:
       run: |
         yarn global add bundle-dependencies@1.0.2
         yarn global add version-bump-prompt@6.1.0
+        echo "PATH=$(yarn global bin):$PATH" >> $GITHUB_ENV
     - name: Checkout Code
       shell: bash 
       run: |
