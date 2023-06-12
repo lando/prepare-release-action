@@ -35,17 +35,27 @@ runs:
         node-version: '16'
     - name: Validate package.json
       uses: actions/github-script@v6
-      env:
-        PJSON_LOCATION: ${{ inputs.pjson-location }}
       with:
-        script: ${{ github.action_path }}/validate-pjson.js 
+        script: |
+          try {
+            const pjson = require(`${core.getInput('pjson-location')}/package.json`);
+          } catch (err) {
+            core.setFailed(`Invalid Lando plugin; required keywords not detected in package.json. ${err}`);
+          }
     - name: Validate Plugin
       if: ${{ inputs.validate-plugin == 'true' }}
       uses: actions/github-script@v6
-      env:
-        PJSON_LOCATION: ${{ inputs.pjson-location }}
       with:
-        script: ${{ github.action_path }}/validate-lando-plugin.js 
+        script: |
+          const pjson = require(`${core.getInput('pjson-location')}/package.json`);
+          const hasLandoKeyword = Array.isArray(pjson.keywords) && (pjson.keywords.includes('lando') || pjson.keywords.includes('lando-plugin'));
+          if (hasLandoKeyword) {
+            // Add in GitHub output https://docs.github.com/en/actions/using-workflows/workflow-commands-for-github-actions
+            core.info('Confirmed this is a Lando plugin.')
+            process.exit(0);
+          } else {
+            core.setFailed('Invalid Lando plugin; required keywords not detected in package.json.');
+          }
     - name: Install Dependencies
       shell: bash 
       run: |
