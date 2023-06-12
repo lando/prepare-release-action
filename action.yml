@@ -33,6 +33,7 @@ runs:
       uses: actions/setup-node@v2
       with:
         node-version: '16'
+        cache: 'yarn'
     - name: Validate package.json
       uses: actions/github-script@v6
       env:
@@ -65,8 +66,8 @@ runs:
     - name: Install Dependencies
       shell: bash 
       run: |
-        yarn install -g bundle-dependencies@1.0.2
-        yarn install -g version-bump-prompt@6.1.0
+        yarn global add bundle-dependencies@1.0.2
+        yarn global add version-bump-prompt@6.1.0
     - name: Checkout Code
       shell: bash 
       run: |
