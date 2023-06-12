@@ -35,11 +35,14 @@ runs:
         node-version: '16'
     - name: Validate package.json
       uses: actions/github-script@v6
+      env:
+        PJSON_LOCATION: ${{ github.workspace }}/package.json
       with:
         script: |
           try {
-            console.log(github, context, core);
-            const pjson = require(`${github.workspace}/package.json`);
+            console.log(process.env);
+            const pjsonLocation = process.env.PJSON_LOCATION;
+            const pjson = require(pjsonLocation);
           } catch (err) {
             core.setFailed(`Unable to load package.json: ${err}`);
           }
