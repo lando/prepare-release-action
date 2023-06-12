@@ -1,4 +1,5 @@
 'use strict'
+const core = require('@actions/core')
 const pjson = require(`${process.env.PJSON_LOCATION}/package.json`);
 
 const hasLandoKeyword = Array.isArray(pjson.keywords) && (pjson.keywords.includes('lando') || pjson.keywords.includes('lando-plugin'));

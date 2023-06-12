@@ -38,16 +38,17 @@ runs:
       with:
         script: |
           try {
-            const pjson = require(`${core.getInput('pjson-location')}/package.json`);
+            const pjson = require(`${github.workspace}/package.json`);
           } catch (err) {
-            core.setFailed(`Invalid Lando plugin; required keywords not detected in package.json. ${err}`);
+            core.setFailed(`Unable to load package.json: ${err}`);
           }
     - name: Validate Plugin
       if: ${{ inputs.validate-plugin == 'true' }}
       uses: actions/github-script@v6
       with:
         script: |
-          const pjson = require(`${core.getInput('pjson-location')}/package.json`);
+          const pjsonLocation = core.getInput('pjson-location');
+          const pjson = require(pjsonLocation);
           const hasLandoKeyword = Array.isArray(pjson.keywords) && (pjson.keywords.includes('lando') || pjson.keywords.includes('lando-plugin'));
           if (hasLandoKeyword) {
             // Add in GitHub output https://docs.github.com/en/actions/using-workflows/workflow-commands-for-github-actions
