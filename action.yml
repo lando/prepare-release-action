@@ -40,18 +40,19 @@ runs:
       with:
         script: |
           try {
-            console.log(process.env);
             const pjsonLocation = process.env.PJSON_LOCATION;
-            const pjson = require(pjsonLocation);
+            const pjson = require(`${pjsonLocation}`);
           } catch (err) {
             core.setFailed(`Unable to load package.json: ${err}`);
           }
     - name: Validate Plugin
       if: ${{ inputs.validate-plugin == 'true' }}
       uses: actions/github-script@v6
+      env:
+        PJSON_LOCATION: ${{ github.workspace }}/package.json
       with:
         script: |
-          const pjsonLocation = core.getInput('pjson-location');
+          const pjsonLocation = process.env.PJSON_LOCATION;
           const pjson = require(pjsonLocation);
           const hasLandoKeyword = Array.isArray(pjson.keywords) && (pjson.keywords.includes('lando') || pjson.keywords.includes('lando-plugin'));
           if (hasLandoKeyword) {
