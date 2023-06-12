@@ -24,7 +24,7 @@ inputs:
   pjson-location:
     description: 'Location of package.json for the project to be prepared.'
     required: false
-    default: '${{ github.workspace }}/package.json'
+    default: ${{ github.workspace }}/package.json
   
 runs:
   using: "composite"
@@ -38,7 +38,6 @@ runs:
       with:
         script: |
           try {
-            console.log(`Workspace path is ${core.getInput('pjson-location')}`);
             const pjson = require(`${core.getInput('pjson-location')}/package.json`);
           } catch (err) {
             core.setFailed(`Invalid Lando plugin; required keywords not detected in package.json. ${err}`);
