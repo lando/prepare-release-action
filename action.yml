@@ -38,6 +38,7 @@ runs:
       with:
         script: |
           try {
+            console.log(github, context, core);
             const pjson = require(`${github.workspace}/package.json`);
           } catch (err) {
             core.setFailed(`Unable to load package.json: ${err}`);
