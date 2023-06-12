@@ -38,6 +38,7 @@ runs:
       with:
         script: |
           try {
+            console.log(`Workspace path is ${core.getInput('pjson-location')}`);
             const pjson = require(`${core.getInput('pjson-location')}/package.json`);
           } catch (err) {
             core.setFailed(`Invalid Lando plugin; required keywords not detected in package.json. ${err}`);
