@@ -2,7 +2,7 @@ name: 'Prepare Lando Plugin'
 description: 'Prepare a Lando plugin for publishing to a package registry.'
 inputs:
   tags:  # id of input
-    description: 'The new tag of the plugin to be published.'
+    description: 'The new tag of the plugin to be published. Can be a comma delimited string of multiple tags.'
     required: false
     default: ${{ github.event.release.tag_name }}
   git-username:
@@ -79,6 +79,8 @@ runs:
       if: ${{ inputs.bundle-deps == 'true' }}
       run: |
         bundle-dependencies update
+        echo "Bundled dependencies:"
+        bundle-dependencies list-bundled-dependencies
     - name: Bump Version and Push 
       shell: bash 
       run: |
@@ -94,8 +96,7 @@ runs:
           git tag -f ${tag} $(git log --pretty=format:'%h' -n 1)
           git push --force origin ${tag}
         done
-    - name: Output
+    - name: Output package bump result
       shell: bash 
       run: |
-        echo "Bumped package version to ${{ github.event.release.tag_name }} with the following bundled dependencies:"
-        bundle-dependencies list-bundled-dependencies
+        echo "Bumped package version to ${{ github.event.release.tag_name }}"
