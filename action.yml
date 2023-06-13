@@ -65,9 +65,8 @@ runs:
     - name: Install Dependencies
       shell: bash 
       run: |
-        yarn global add bundle-dependencies@1.0.2
-        yarn global add version-bump-prompt@6.1.0
-        echo "PATH=$(yarn global bin):$PATH" >> $GITHUB_ENV
+        npm install -g bundle-dependencies@1.0.2
+        npm install -g version-bump-prompt@6.1.0
     - name: Checkout Code
       shell: bash 
       run: |
@@ -79,11 +78,11 @@ runs:
       shell: bash 
       if: ${{ inputs.bundle-deps == 'true' }}
       run: |
-        yarn run bundle-dependencies update
+        bundle-dependencies update
     - name: Bump Version and Push 
       shell: bash 
       run: |
-        yarn run bump "${{ github.event.release.tag_name }}" --commit
+        bump "${{ github.event.release.tag_name }}" --commit
         git push origin ${{ github.event.release.target_commitish }}
     - name: Retag Release
       shell: bash 
@@ -99,4 +98,4 @@ runs:
       shell: bash 
       run: |
         echo "Bumped package version to ${{ github.event.release.tag_name }} with the following bundled dependencies:"
-        yarn run bundle-dependencies list-bundled-dependencies
+        bundle-dependencies list-bundled-dependencies
