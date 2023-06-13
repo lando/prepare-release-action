@@ -1,6 +1,6 @@
 {
   "name": "prepare-plugin-action",
-  "version": "1.6.0",
+  "version": "1.7.0",
   "description": "Prepare a Lando plugin for publishing to a package registry.",
   "main": "index.js",
   "repository": "git@github.com:lando/prepare-plugin-action.git",
