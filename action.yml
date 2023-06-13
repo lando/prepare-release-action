@@ -88,7 +88,7 @@ runs:
       shell: bash 
       run: |
         TAGS=${{ inputs.tags }}
-        IFS=$'\n' read -rd '' -a TAG_ARRAY <<< "$TAGS"
+        IFS=',' read -ra TAG_ARRAY <<< "$TAGS"
 
         for tag in "${TAG_ARRAY[@]}"; do
           git tag -f ${tag} $(git log --pretty=format:'%h' -n 1)
