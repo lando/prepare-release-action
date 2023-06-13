@@ -23,3 +23,4 @@ jobs:
         with:
           tags: 'v1,${{ github.event.release.tag_name }}'
           validate-plugin: false
+          bundle-deps: false
