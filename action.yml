@@ -30,7 +30,7 @@ inputs:
   sync-branch:
     description: "The target branch to use when syncing changes back to the repo ."
     required: false
-    default: ${{ github.event.release.target_commitish }}
+    default: ${{ github.event.release.target_commitish }} || ${{ github.ref_name }}
   sync-email:
     description: "The email to use when syncing changes back to the repo."
     required: false
@@ -76,9 +76,6 @@ runs:
           // and that we have a package.json
           if (!fs.existsSync(`${inputs.root}/package.json`)) core.setFailed(`Could not detect a package.json in ${inputs.root}`);
 
-          // log
-          core.info(`will bump ${inputs.root}/pacakge.json to ${inputs.version}`);
-
     - name: Install Dependencies
       shell: bash
       run: |
@@ -113,6 +110,10 @@ runs:
     - name: Checkout Code
       shell: bash
       run: |
+        echo "::group::Git information"
+        echo "branch: ${{ inputs.sync-branch }}"
+        echo "::endgroup::"
+
         git fetch --unshallow && git fetch --all
         git config user.name ${{ inputs.git-username }}
         git config user.email ${{ inputs.git-email }}
@@ -126,7 +127,12 @@ runs:
     - name: Bump Version and Push
       shell: bash
       run: |
-        bump "${{ github.event.release.tag_name }}" --commit
+        echo "::group::Version information"
+        echo "version: ${{ inputs.version }}"
+        echo "package.json: ${{ inputs.root }}/package.json"
+        echo "::endgroup::"
+
+        bump "${{ github.event.release.tag_name }}" --commit --all "${{ inputs.root }}/package.json"
         git diff
         # git push origin ${{ github.event.release.target_commitish }}
 
