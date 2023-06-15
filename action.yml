@@ -129,6 +129,20 @@ runs:
     #       }
 
     - name: Run Commands
+      uses: actions/github-script@v6
+      with:
+        script: |
+          // get inputs
+          const inputs = ${{ toJSON(inputs) }};
+
+          core.startGroup('Command information');
+          // loop through commands
+          for (const command of input.commands) {
+            console.log(input.commands);
+            // await exec.exec('node index.js');
+          }
+          core.endGroup();
+
       shell: bash
       run: |
         echo "::group::Command information"
