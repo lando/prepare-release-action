@@ -138,7 +138,7 @@ runs:
           const {commands} = ${{ toJSON(inputs) }};
 
           // loop through and run commands if we have a list of them
-          if (Array.isArray(commands)) {
+          if (typeof commands === 'string') {
             core.startGroup('Command information');
             for (const command of commands.split(os.EOL)) {
               console.log(command);
