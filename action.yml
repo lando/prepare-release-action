@@ -134,18 +134,18 @@ runs:
         script: |
           // deps
           const os = require('os');
-
           // get inputs
-          const inputs = ${{ toJSON(inputs) }};
-          const commands = inputs.split(os.EOL);
+          const {commands} = ${{ toJSON(inputs) }};
 
-          core.startGroup('Command information');
-          // loop through commands
-          for (const command of commands) {
-            console.log(command);
-            // await exec.exec('node index.js');
+          // loop through and run commands if we have a list of them
+          if (Array.isArray(commands)) {
+            core.startGroup('Command information');
+            for (const command of commands.split(os.EOL)) {
+              console.log(command);
+              // await exec.exec('node index.js');
+            }
+            core.endGroup();
           }
-          core.endGroup();
 
     - name: Bump
       shell: bash
