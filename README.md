@@ -1,6 +1,8 @@
-# Prepare Lando Plugin Action
+# Prepare Release Action
 
-Basic action to prepare a Lando plugin for publishing to a package registry like NPM. The action will...
+This action allows you to automate release steps eg bump version, compile code, bundle deps and optionally push/sync those changes back to the soruce repo.
+
+It was designed for Lando Plugin and has an easy-mode `lando-plugin` input, however, you should be able to use it on any javascript project.
 
 - Make sure the plugin in question
 - Bundle dependencies using [bundle-dependencies](https://www.npmjs.com/package/bundle-dependencies)
@@ -17,6 +19,18 @@ Basic action to prepare a Lando plugin for publishing to a package registry like
           commit-email: 'github-actions@github.com'
           lando-plugin: true
 ```
+
+
+## Inputs
+
+All inputs are optional. If you do nothing the latest `stable` Lando will be installed.
+
+| Name | Description | Default | Example |
+|---|---|---|---|
+| `lando-version` | The version of Lando to install. If set this has primacy over `lando-version-file`. | `stable` | `3.14.0` |
+| `lando-version-file` | A file that contains the version of Lando to install. | `.lando-version` | `.tool-versions` |
+| `config` | A list of `.` delimited config. If set these have primacy over values in `config-file` | `null` | `engineConfig.port=2376` |
+| `config-file` | The path to a Lando global config file to use. | `null` | `/config/lando-global.yml` |
 
 ## Warnings
 

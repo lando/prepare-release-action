@@ -1,11 +1,20 @@
 {
-  "name": "prepare-plugin-action",
-  "version": "1.9.0",
-  "description": "Prepare a Lando plugin for publishing to a package registry.",
-  "main": "index.js",
-  "repository": "git@github.com:lando/prepare-plugin-action.git",
-  "author": "<alec+git@lando.dev>",
-  "license": "MIT",
-  "private": false,
-  "bundledDependencies": []
+  "name": "@lando/prepare-release-action",
+  "version": "2.0.0-alpha.0",
+  "description": "An action that can automate release steps and sync them back to the releasing repo.",
+  "contributors": [
+    "Alec Reynolds @reynoldsalec",
+    "Mike Pirog @pirog"
+  ],
+  "license": "GPL-3.0",
+  "repository": "https://github.com/lando/prepare-release-action",
+  "bugs": "https://github.com/lando/prepare-release-action/issues",
+  "homepage": "https://github.com/lando/prepare-release-action",
+  "keywords": [
+    "lando",
+    "Github Actions"
+  ],
+  "engines": {
+    "node": ">=16.0.0"
+  }
 }
