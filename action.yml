@@ -54,14 +54,17 @@ runs:
       uses: actions/github-script@v6
       with:
         script: |
-          const {root, version} = ${{ toJSON(inputs) }};
+          const inputs = ${{ toJSON(inputs) }};
 
           const valid = require('semver/functions/valid');
           const clean = require('semver/functions/clean');
           const coerce = require('semver/functions/coerce');
 
+          // validate that we have a version
+
+          const version = clean(inputs.version);
           console.log(coerce(version, {includePrerelease: true}));
-          console.log(valid(clean(coerce(version, {includePrerelease: true}))));
+          console.log(valid(coerce(version, {includePrerelease: true})));
 
           core.info("hi");
 
