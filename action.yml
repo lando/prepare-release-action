@@ -50,24 +50,31 @@ runs:
       run: yarn install --prefer-offline --frozen-lockfile
       shell: bash
 
-    - name: Validate Inputs
+    - name: Validate Needed Inputs
       uses: actions/github-script@v6
       with:
         script: |
-          const inputs = ${{ toJSON(inputs) }};
-
+          // deps
           const valid = require('semver/functions/valid');
           const clean = require('semver/functions/clean');
-          const coerce = require('semver/functions/coerce');
+
+          // get inputs
+          const inputs = ${{ toJSON(inputs) }};
 
           // validate that we have a version
+          if (!inputs.version) core.setFailed('Version is a required input!');
 
-          const version = clean(inputs.version);
-          console.log(coerce(version, {includePrerelease: true}));
-          console.log(valid(coerce(version, {includePrerelease: true})));
+          // and that it is semantically valid
+          if (valid(clean(inputs.version)) === null) core.setFailed('Version must be semver valid!');
+
+          // validate we have a package.json
 
           core.info("hi");
-
+          // print helpful information
+          core.startGroup('Stuff');
+          core.info(`package.json: ${inputs.root}/package.json`);
+          core.info(`version: ${inputs.version}`);
+          core.endGroup();
 
 
     # - name: Validate Plugin
