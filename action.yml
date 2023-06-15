@@ -135,8 +135,15 @@ runs:
         echo "::endgroup::"
         bump "${{ inputs.version }}" --commit --all
 
-        echo "::group::Git diff"
-        git diff
+        echo "::group::Git changes"
+        echo -n "log:"
+        git --no-pager log -1
+
+        echo -n "tags:"
+        git describe --tags HEAD
+
+        echo -n "diff:"
+        git diff HEAD~1
         echo "::endgroup::"
 
         # git push origin ${{ github.event.release.target_commitish }}
