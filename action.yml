@@ -155,7 +155,6 @@ runs:
         # and other tags if applicable
         IFS="\n" read -ra TAG_ARRAY <<< "${{ inputs.sync-tags }}"
         for tag in "${TAG_ARRAY[@]}"; do
-          echo "$tag"
           git tag -f ${tag} $(git log --pretty=format:"%h" -n 1)
         done
         echo "::endgroup::"
@@ -163,14 +162,13 @@ runs:
     - name: Log
       shell: bash
       run: |
-        echo "::group::Git changes"
-        echo -n "log:"
+        echo "::group::Change information"
         git --no-pager log -1
 
-        echo -n "tags:"
-        git describe --tags HEAD
+        echo -n "\ntags: "
+        git --no-pager tag --points-at HEAD
 
-        echo -n "diff:"
+        echo "\ndiff: "
         git diff HEAD~1
         echo "::endgroup::"
 
