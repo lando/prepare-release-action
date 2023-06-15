@@ -132,12 +132,16 @@ runs:
       uses: actions/github-script@v6
       with:
         script: |
+          // deps
+          const os = require('os');
+
           // get inputs
           const inputs = ${{ toJSON(inputs) }};
+          const commands = inputs.split(os.EOL);
 
           core.startGroup('Command information');
           // loop through commands
-          for (const command of inputs.commands) {
+          for (const command of commands) {
             console.log(command);
             // await exec.exec('node index.js');
           }
