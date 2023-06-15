@@ -166,7 +166,7 @@ runs:
         git --no-pager log -1
         echo "-"
 
-        echo -n "tags:"
+        echo "tags:"
         git --no-pager tag --points-at HEAD
         echo "-"
 
