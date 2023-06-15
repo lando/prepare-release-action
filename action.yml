@@ -30,7 +30,7 @@ inputs:
   sync-branch:
     description: "The target branch to use when syncing changes back to the repo ."
     required: false
-    default: ${{ github.event.release.target_commitish || github.ref }}
+    default: ${{ github.event.release.target_commitish || github.event.pull_request.head.ref || github.ref_name }}
   sync-email:
     description: "The email to use when syncing changes back to the repo."
     required: false
