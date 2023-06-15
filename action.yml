@@ -135,7 +135,7 @@ runs:
         IFS="\n" read -ra COMMAND_ARRAY <<< "${{ inputs.commands }}"
         for cmd in "${COMMAND_ARRAY[@]}"; do
           echo "running command: ${cmd}"
-          exec ${cmd}
+          ${cmd}
         done
         echo "::endgroup::"
 
