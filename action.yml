@@ -132,7 +132,7 @@ runs:
       shell: bash
       run: |
         echo "::group::Command information"
-        IFS="\n" read -ra COMMAND_ARRAY <<< "${{ inputs.commands }}"
+        IFS="\n" read -ra COMMAND_ARRAY <<< ${{ inputs.commands }}
         for cmd in "${COMMAND_ARRAY[@]}"; do
           echo "${cmd}"
         done
