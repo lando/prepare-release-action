@@ -12,6 +12,9 @@ inputs:
     default: ${{ github.event.release.tag_name }}
 
   # Optional
+  commands:
+    description: "A list of commands to run to prepare the release."
+    required: false
   git-username:
     description: "Username used when committing the newly bumped version of the plugin."
     required: false
@@ -24,6 +27,8 @@ inputs:
     description: "The location of the code being prepared for release."
     required: false
     default: ${{ github.workspace }}
+
+
 
   # commands:
   # commit:
