@@ -16,8 +16,6 @@ jobs:
         version:
           - v0.0.1-riker.1
           - 1.0.0-beta.1
-          - v5
-          - not-me
 
     steps:
       - name: Checkout code
