@@ -56,9 +56,11 @@ runs:
         script: |
           const {root, version} = ${{ toJSON(inputs) }};
 
-          console.log(root, version);
-          const semver = require("semver")
-          core.notice(semver.coerce(version));
+          const valid = require('semver/functions/valid');
+          const clear = require('semver/functions/clean');
+          const coerce = require('semver/functions/coerce');
+
+          core.notice(coerce(version, {includePrerelease: true}));
           core.info("hi");
 
 
