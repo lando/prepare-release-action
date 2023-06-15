@@ -137,8 +137,8 @@ runs:
 
           core.startGroup('Command information');
           // loop through commands
-          for (const command of input.commands) {
-            console.log(input.commands);
+          for (const command of inputs.commands) {
+            console.log(command);
             // await exec.exec('node index.js');
           }
           core.endGroup();
