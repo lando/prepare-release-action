@@ -57,7 +57,7 @@ runs:
           const {root, version} = ${{ toJSON(inputs) }};
 
           const valid = require('semver/functions/valid');
-          const clear = require('semver/functions/clean');
+          const clean = require('semver/functions/clean');
           const coerce = require('semver/functions/coerce');
 
           console.log(coerce(version, {includePrerelease: true}));
