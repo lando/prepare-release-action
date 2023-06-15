@@ -138,7 +138,7 @@ runs:
         echo "-"
 
         # bump versions
-        bump "${{ inputs.version }}" --commit --all
+        bump "${{ inputs.version }}" --commit "@lando/prepare-release-action preparing release ${{ inputs.version }}" --all
         echo "::endgroup::"
 
     - name: Tag
@@ -147,7 +147,6 @@ runs:
         echo "::group::Tag information"
         echo "version: ${{ inputs.version }}"
         echo "tags: ${{ inputs.sync-tags }}"
-        echo "-"
 
         # tag the release version
         git tag -f "${{ inputs.version }}" $(git log --pretty=format:"%h" -n 1)
