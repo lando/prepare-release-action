@@ -28,3 +28,6 @@ jobs:
           commands: |
             hello
             there
+          sync-tags: |
+            v2
+            ryker5000

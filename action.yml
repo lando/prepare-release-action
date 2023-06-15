@@ -52,7 +52,7 @@ runs:
         node-version: "16"
         cache: npm
     - name: Install dependencies
-      run: npm install --prefer-offline --frozen-lockfile
+      run: npm ci
       shell: bash
 
     - name: Validate Needed Inputs
@@ -76,11 +76,29 @@ runs:
           // and that we have a package.json
           if (!fs.existsSync(`${inputs.root}/package.json`)) core.setFailed(`Could not detect a package.json in ${inputs.root}`);
 
-    - name: Install Dependencies
+    - name: Install global deps
       shell: bash
       run: |
+        echo "::group::Global deps installation"
         npm install -g bundle-dependencies@1.0.2
         npm install -g version-bump-prompt@6.1.0
+        echo "::endgroup::"
+
+    - name: Checkout Code
+      shell: bash
+      run: |
+        echo "::group::Git information"
+        echo "branch: ${{ inputs.sync-branch }}"
+        echo "email: ${{ inputs.sync-email }}"
+        echo "username: ${{ inputs.sync-username }}"
+        echo ""
+        echo ""
+
+        git fetch --unshallow && git fetch --all
+        git config user.name ${{ inputs.sync-username }}
+        git config user.email ${{ inputs.sync-email }}
+        git checkout ${{ inputs.sync-branch }}
+        echo "::endgroup::"
 
     # - name: Bundle dependencies
     #   shell: bash
@@ -107,34 +125,47 @@ runs:
     #         core.setFailed("Invalid Lando plugin; required keywords not detected in package.json.");
     #       }
 
-    - name: Checkout Code
-      shell: bash
-      run: |
-        echo "::group::Git information"
-        echo "branch: ${{ inputs.sync-branch }}"
-        echo "email: ${{ inputs.sync-email }}"
-        echo "username: ${{ inputs.sync-username }}"
-        echo "::endgroup::"
-
-        git fetch --unshallow && git fetch --all
-        git config user.name ${{ inputs.sync-username }}
-        git config user.email ${{ inputs.sync-email }}
-        git checkout ${{ inputs.sync-branch }}
-
     - name: Run Commands
       shell: bash
       run: |
         echo "hello"
 
-    - name: Bump Version and Push
+    - name: Bump
       shell: bash
       run: |
-        echo "::group::Version information"
+        echo "::group::Bump information"
         echo "version: ${{ inputs.version }}"
         echo "package.json: ${{ inputs.root }}/package.json"
-        echo "::endgroup::"
-        bump "${{ inputs.version }}" --commit --all
+        echo ""
+        echo ""
 
+        # bump versions
+        bump "${{ inputs.version }}" --commit --all
+        echo "::endgroup::"
+
+    - name: Tag
+      shell: bash
+      run: |
+        echo "::group::Tag information"
+        echo "version: ${{ inputs.version }}"
+        echo "tags: ${{ inputs.sync-tags }}"
+        echo ""
+        echo ""
+
+        # tag the release version
+        git tag -f ${inputs.version} $(git log --pretty=format:"%h" -n 1)
+
+        # and other tags if applicable
+        TAGS=${{ inputs.sync-tags }}
+        IFS="\n" read -ra TAG_ARRAY <<< "$TAGS"
+        for tag in "${TAG_ARRAY[@]}"; do
+          git tag -f ${tag} $(git log --pretty=format:"%h" -n 1)
+        done
+        echo "::endgroup::"
+
+    - name: Log
+      shell: bash
+      run: |
         echo "::group::Git changes"
         echo -n "log:"
         git --no-pager log -1
@@ -146,23 +177,8 @@ runs:
         git diff HEAD~1
         echo "::endgroup::"
 
+    - name: Sync
+      shell: bash
+      run: |
         # git push origin ${{ github.event.release.target_commitish }}
-
-    # - name: Retag Release
-    #   shell: bash
-    #   run: |
-    #     TAGS=${{ inputs.tags }}
-    #     IFS="," read -ra TAG_ARRAY <<< "$TAGS"
-
-    #     for tag in "${TAG_ARRAY[@]}"; do
-    #       git tag -f ${tag} $(git log --pretty=format:"%h" -n 1)
-    #       git push --force origin ${tag}
-    #     done
-
-    # - name: Output package bump result
-    #   shell: bash
-    #   run: |
-    #     echo "Bumped package version to ${{ github.event.release.tag_name }}"
-
-
-
+        # git push --force origin ${tag}
