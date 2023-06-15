@@ -91,8 +91,6 @@ runs:
         echo "branch: ${{ inputs.sync-branch }}"
         echo "email: ${{ inputs.sync-email }}"
         echo "username: ${{ inputs.sync-username }}"
-        echo ""
-        echo ""
 
         git fetch --unshallow && git fetch --all
         git config user.name ${{ inputs.sync-username }}
@@ -136,8 +134,6 @@ runs:
         echo "::group::Bump information"
         echo "version: ${{ inputs.version }}"
         echo "package.json: ${{ inputs.root }}/package.json"
-        echo ""
-        echo ""
 
         # bump versions
         bump "${{ inputs.version }}" --commit --all
@@ -149,14 +145,15 @@ runs:
         echo "::group::Tag information"
         echo "version: ${{ inputs.version }}"
         echo "tags: ${{ inputs.sync-tags }}"
-        echo ""
-        echo ""
 
         # tag the release version
         git tag -f "${{ inputs.version }}" $(git log --pretty=format:"%h" -n 1)
 
+        git --no-pager log -1
+        git describe --tags HEAD
+
         # and other tags if applicable
-        TAGS=${{ inputs.sync-tags }}
+        TAGS="${{ inputs.sync-tags }}"
         IFS="\n" read -ra TAG_ARRAY <<< "$TAGS"
         for tag in "${TAG_ARRAY[@]}"; do
           git tag -f ${tag} $(git log --pretty=format:"%h" -n 1)
