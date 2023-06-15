@@ -155,6 +155,7 @@ runs:
         # and other tags if applicable
         IFS="\n" read -ra TAG_ARRAY <<< "${{ inputs.sync-tags }}"
         for tag in "${TAG_ARRAY[@]}"; do
+          echo "$tag"
           git tag -f ${tag} $(git log --pretty=format:"%h" -n 1)
         done
         echo "::endgroup::"
