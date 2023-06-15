@@ -77,7 +77,7 @@ runs:
           if (!fs.existsSync(`${inputs.root}/package.json`)) core.setFailed(`Could not detect a package.json in ${inputs.root}`);
 
           // log
-          core.info(`will bump ${inputs.root}/pacakge.json to ${inputs.version});
+          core.info(`will bump ${inputs.root}/pacakge.json to ${inputs.version}`);
 
     - name: Install Dependencies
       shell: bash
