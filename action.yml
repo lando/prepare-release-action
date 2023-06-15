@@ -44,8 +44,8 @@ runs:
       uses: actions/github-script@v6
       with:
         script: |
-          const version = core.getInput('version', { required: true });
-          console.log(version);
+          const inputs = ${{ toJSON(inputs) }};
+          console.log(inputs);
 
     # - name: Validate Plugin
     #   if: ${{ inputs.validate-plugin == "true" }}
