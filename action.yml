@@ -133,7 +133,7 @@ runs:
         echo "version: ${{ inputs.version }}"
         echo "package.json: ${{ inputs.root }}/package.json"
         echo "::endgroup::"
-        bump "${{ inputs.version }}" --commit --all "${{ inputs.root }}/package.json"
+        bump "${{ inputs.version }}" --commit --all
 
         echo "::group::Git diff"
         git diff
