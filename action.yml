@@ -140,10 +140,7 @@ runs:
           // loop through and run commands if we have a list of them
           if (typeof commands === 'string') {
             core.startGroup('Command information');
-            for (const command of commands.split(os.EOL)) {
-              console.log(command);
-              // await exec.exec('node index.js');
-            }
+            for (const command of commands.split(os.EOL)) await exec.exec(command);
             core.endGroup();
           }
 
