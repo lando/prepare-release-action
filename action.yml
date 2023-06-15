@@ -153,8 +153,7 @@ runs:
         git describe --tags HEAD
 
         # and other tags if applicable
-        TAGS="${{ inputs.sync-tags }}"
-        IFS="\n" read -ra TAG_ARRAY <<< "$TAGS"
+        IFS="\n" read -ra TAG_ARRAY <<< "${{ inputs.sync-tags }}"
         for tag in "${TAG_ARRAY[@]}"; do
           git tag -f ${tag} $(git log --pretty=format:"%h" -n 1)
         done
