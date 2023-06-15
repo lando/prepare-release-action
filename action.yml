@@ -131,14 +131,20 @@ runs:
     - name: Run Commands
       shell: bash
       run: |
-        echo "hello"
+        echo "::group::Command information"
+        IFS="\n" read -ra COMMAND_ARRAY <<< "${{ inputs.commands }}"
+        for cmd in "${COMMAND_ARRAY[@]}"; do
+          echo "running command: ${cmd}"
+          exec "${cmd}"
+        done
+        echo "::endgroup::"
 
     - name: Bump
       shell: bash
       run: |
         echo "::group::Bump information"
         echo "version: ${{ inputs.version }}"
-        echo "message ${{ inputs.sync-message }}"
+        echo "message: ${{ inputs.sync-message }}"
         echo "package.json: ${{ inputs.root }}/package.json"
         echo "-"
 
