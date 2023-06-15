@@ -26,6 +26,6 @@ jobs:
         with:
           version: ${{ matrix.version }}
           commands: |
-            hello
-            there
+            echo "hello there";
+            pwd
 
