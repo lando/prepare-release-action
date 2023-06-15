@@ -143,15 +143,6 @@ runs:
           }
           core.endGroup();
 
-      shell: bash
-      run: |
-        echo "::group::Command information"
-        IFS="\n" read -ra COMMAND_ARRAY <<< ${{ inputs.commands }}
-        for cmd in "${COMMAND_ARRAY[@]}"; do
-          echo "${cmd}"
-        done
-        echo "::endgroup::"
-
     - name: Bump
       shell: bash
       run: |
