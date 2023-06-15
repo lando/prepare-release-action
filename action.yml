@@ -48,6 +48,7 @@ runs:
         cache: yarn
     - name: Install Yarn dependencies
       run: yarn install --prefer-offline --frozen-lockfile
+      shell: bash
 
     - name: Validate Inputs
       uses: actions/github-script@v6
