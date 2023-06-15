@@ -114,7 +114,6 @@ runs:
         echo "branch: ${{ inputs.sync-branch }}"
         echo "email: ${{ inputs.sync-email }}"
         echo "username: ${{ inputs.sync-username }}"
-
         echo "::endgroup::"
 
         git fetch --unshallow && git fetch --all
@@ -135,6 +134,10 @@ runs:
         echo "package.json: ${{ inputs.root }}/package.json"
         echo "::endgroup::"
 
+        pwd
+        echo "${{ inputs.root }}/package.json"
+        which bump
+        bump --help
         bump "${{ github.event.release.tag_name }}" --commit --all "${{ inputs.root }}/package.json"
         git diff
         # git push origin ${{ github.event.release.target_commitish }}
