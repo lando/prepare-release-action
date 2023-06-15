@@ -133,13 +133,12 @@ runs:
         echo "version: ${{ inputs.version }}"
         echo "package.json: ${{ inputs.root }}/package.json"
         echo "::endgroup::"
+        bump "${{ inputs.version }}" --commit --all "${{ inputs.root }}/package.json"
 
-        pwd
-        echo "${{ inputs.root }}/package.json"
-        which bump
-        bump --help
-        bump "${{ github.event.release.tag_name }}" --commit --all "${{ inputs.root }}/package.json"
+        echo "::group::Git diff"
         git diff
+        echo "::endgroup::"
+
         # git push origin ${{ github.event.release.target_commitish }}
 
     # - name: Retag Release
