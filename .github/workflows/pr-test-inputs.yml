@@ -19,3 +19,5 @@ jobs:
 
       - name: Prepare release
         uses: ./
+        with:
+          version: "0.0.1-riker.1"
