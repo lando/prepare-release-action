@@ -57,14 +57,10 @@ runs:
           const {root, version} = ${{ toJSON(inputs) }};
 
           console.log(root, version);
-          const semver = require('semver')
+          const semver = require("semver")
           core.notice(semver.coerce(version));
-          core.info('hi');
+          core.info("hi");
 
-
-          # core.startGroup('Configuration information');
-          # getObjectKeys(config).forEach(key => core.info(`${key}: ${get(config, key)}`));
-          # core.endGroup();
 
 
     # - name: Validate Plugin
