@@ -5518,9 +5518,10 @@ const main = async () => {
     core.startGroup('Ensuring utils');
     await exec.exec('npm', ['install', '--global', 'bundle-dependencies@1.0.2']);
     await exec.exec('npm', ['install', '--global', 'version-bump-prompt@6.1.0']);
-    const binDir = execSync('npm config get prefix', {maxBuffer: 1024 * 1024 * 10, encoding: 'utf-8'});
-    core.info(`bin-dir: ${binDir.trim()}`);
-    await exec.exec('ls', ['-lsa', binDir.trim()]);
+    const prefix = execSync('npm config get prefix', {maxBuffer: 1024 * 1024 * 10, encoding: 'utf-8'});
+    const binDir = path.join(prefix.trim(), 'bin');
+    core.info(`bin-dir: ${binDir}`);
+    await exec.exec('ls', ['-lsa', binDir]);
     core.endGroup();
 
     // configure git
