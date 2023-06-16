@@ -70,7 +70,6 @@ const main = async () => {
     for (const tag of tags) await exec.exec('git', ['tag', '--force', tag, currentCommit.trim()]);
 
     // if using landoPlugin ez-mode then validate lando plugin
-    console.log(jsonfile.readFileSync(inputs.pjson));
     if (inputs.landoPlugin && !isLandoPlugin(jsonfile.readFileSync(inputs.pjson))) {
       throw new Error('Does not appear to be a valid Lando plugin! package.json must contain a lando key or the lando-plugin keyword');
     }
