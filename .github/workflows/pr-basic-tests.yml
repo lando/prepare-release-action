@@ -16,6 +16,8 @@ jobs:
         version:
           - v0.0.1-riker.1
           - 1.0.0-beta.1
+        node-version:
+          - '16'
 
     steps:
       - name: Checkout code
