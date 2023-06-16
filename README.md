@@ -38,7 +38,7 @@ We do expand the initial shallow clone that's the default for `actions/checkout`
 
 ### Advanced Usage
 
-**Lando Plugin examples:**
+**Lando Plugin example:**
 
 ```yaml
 - name: Prepare Release
