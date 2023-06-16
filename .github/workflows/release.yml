@@ -1,4 +1,4 @@
-name: Release 
+name: Release
 
 on:
   release:
@@ -6,8 +6,18 @@ on:
       - published
 
 jobs:
-  deploy:
-    runs-on: ubuntu-22.04
+  release:
+    runs-on: ${{ matrix.os }}
+    env:
+      term: xterm
+    strategy:
+      fail-fast: false
+      matrix:
+        os:
+          - ubuntu-22.04
+        node-version:
+          - '16'
+
     env:
       TERM: xterm
       PRERELEASE_TAG: edge
@@ -16,11 +26,19 @@ jobs:
         uses: actions/checkout@v3
         with:
           fetch-depth: 0
-
-      # Bump the release in code, dogfooding this plugin.
+      - name: Install node ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: npm
+      - name: Install deps and prep
+        run: |
+          npm ci
+          npm run lint
+          npm run prepare
       - name: Bump release
         uses: ./
         with:
-          tags: 'v1,${{ github.event.release.tag_name }}'
-          validate-plugin: false
-          bundle-deps: false
+          commands: npm run prepare
+          sync-tags: v2
+
