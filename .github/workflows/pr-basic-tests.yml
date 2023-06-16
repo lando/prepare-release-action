@@ -31,7 +31,9 @@ jobs:
           node-version: ${{ matrix.node-version }}
           cache: npm
       - name: Install deps and prep
-        run: npm ci
+        run: |
+          npm ci
+          npm run prepare
       - name: Make into a Lando Plugin
         uses: actions/github-script@v6
         env:
