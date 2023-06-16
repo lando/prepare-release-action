@@ -26,13 +26,15 @@ const main = async () => {
     // and that we have a package.json
     if (!fs.existsSync(inputs.pjson)) throw new Error(`Could not detect a package.json in ${inputs.root}`);
 
-    // add local node bin to path so we can make use of stuff weve installed
-    // @NOTE: this location differs based on how we are calling it eg dist/index.js or directly
-    if (fs.existsSync(path.resolve(__dirname, '..', 'node_modules', '.bin'))) {
-      core.addPath(path.resolve(__dirname, '..', 'node_modules', '.bin'));
-    } else {
-      core.addPath(path.resolve(__dirname, 'node_modules', '.bin'));
-    }
+    // add global utils, we do this regardless so we can invoke directly and control the version
+    core.startGroup('Ensuring utils');
+    await exec.exec('npm', ['install', '--global', 'bundle-dependencies@1.0.2']);
+    await exec.exec('npm', ['install', '--global', 'version-bump-prompt@6.1.0']);
+    const prefix = execSync('npm config get prefix', {maxBuffer: 1024 * 1024 * 10, encoding: 'utf-8'});
+    const binDir = path.join(prefix.trim(), 'bin');
+    core.info(`bin-dir: ${binDir}`);
+    await exec.exec('ls', ['-lsa', binDir]);
+    core.endGroup();
 
     // configure git
     core.startGroup('Configuring git');
@@ -52,15 +54,15 @@ const main = async () => {
 
     // if using landoPlugin ez-mode then also bundle deps
     if (inputs.landoPlugin) {
-      await exec.exec('bundle-dependencies', ['update']);
-      await exec.exec('bundle-dependencies', ['list-bundled-dependencies']);
+      await exec.exec(`${binDir}/bundle-dependencies`, ['update']);
+      await exec.exec(`${binDir}/bundle-dependencies`, ['list-bundled-dependencies']);
     }
 
     // run user specified commands
     for (const command of inputs.commands) await exec.exec(command);
 
     // bump version
-    await exec.exec('bump', [inputs.version, '--commit', inputs.syncMessage, '--all']);
+    await exec.exec(`${binDir}/bump`, [inputs.version, '--commit', inputs.syncMessage, '--all']);
 
     // get helpful stuff
     const currentCommit = execSync('git log --pretty=format:\'%h\' -n 1', {maxBuffer: 1024 * 1024 * 10, encoding: 'utf-8'});
