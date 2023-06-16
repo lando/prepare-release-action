@@ -1,0 +1,100 @@
+name: Options Tests
+
+on:
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ${{ matrix.os }}
+    env:
+      term: xterm
+    strategy:
+      fail-fast: false
+      matrix:
+        os:
+          - ubuntu-22.04
+        node-version:
+          - '16'
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      - name: Install node ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: npm
+      - name: Install deps and prep
+        run: |
+          npm ci
+          npm run prepare
+
+      - name: Prepare release
+        uses: ./
+        with:
+          version: v5.0.0
+          commands: |
+            touch riker
+            touch picard
+          lando-plugin: false
+          root: ${{ github.workspace }}
+          sync: false
+          sync-email: william.t.riker@starfleet.mil
+          sync-message: riker
+          sync-tags: number1
+          sync-username: Will
+
+      - name: "TEST: should set the version in the package.json"
+        if: always()
+        run: |
+          if cat "${{ github.workspace }}/package.json" | grep version | grep 5.0.0; then
+            echo "::notice title=TEST PASSED::Version set in package.json correctly"
+          else
+            echo "::error title=TEST FAILED!::Version not set in package.json correctly"
+            exit 1
+          fi
+        shell: bash
+
+      - name: "TEST: should set the correct tags"
+        if: always()
+        run: |
+          if git --no-pager tag --points-at HEAD | grep v5.0.0 && git --no-pager tag --points-at HEAD | grep number1; then
+            echo "::notice title=TEST PASSED::Tags set correctly"
+          else
+            echo "::error title=TEST FAILED!::Tags not set correctly"
+            exit 2
+          fi
+        shell: bash
+
+      - name: "TEST: should run the commands successfully"
+        if: always()
+        run: |
+          if stat riker && stat picard; then
+            echo "::notice title=TEST PASSED::Commands ran successfully"
+          else
+            echo "::error title=TEST FAILED!::Commands did not run successfully"
+            exit 3
+          fi
+        shell: bash
+
+      - name: "TEST: should set git email and username correctly"
+        if: always()
+        run: |
+          if git --no-pager config -l | grep user.name | grep Will && git --no-pager config -l | grep user.email | grep william.t.riker@starfleet.mil; then
+            echo "::notice title=TEST PASSED::Git user and email config set correctly"
+          else
+            echo "::error title=TEST FAILED!::Git user and email config not set correctly"
+            exit 4
+          fi
+        shell: bash
+
+      - name: "TEST: should set git message correctly"
+        if: always()
+        run: |
+          if git --no-pager log -1 | grep "riker5.0.0"; then
+            echo "::notice title=TEST PASSED::Git message set correctly"
+          else
+            echo "::error title=TEST FAILED!::Git message not set correctly"
+            exit 5
+          fi
+        shell: bash

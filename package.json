@@ -1,11 +1,39 @@
 {
-  "name": "prepare-plugin-action",
-  "version": "1.9.0",
-  "description": "Prepare a Lando plugin for publishing to a package registry.",
-  "main": "index.js",
-  "repository": "git@github.com:lando/prepare-plugin-action.git",
-  "author": "<alec+git@lando.dev>",
-  "license": "MIT",
-  "private": false,
-  "bundledDependencies": []
+  "name": "@lando/prepare-release-action",
+  "version": "2.0.0-alpha.0",
+  "description": "An action that can automate release steps and sync them back to the releasing repo.",
+  "contributors": [
+    "Alec Reynolds @reynoldsalec",
+    "Mike Pirog @pirog"
+  ],
+  "license": "GPL-3.0",
+  "repository": "https://github.com/lando/prepare-release-action",
+  "bugs": "https://github.com/lando/prepare-release-action/issues",
+  "homepage": "https://github.com/lando/prepare-release-action",
+  "keywords": [
+    "lando",
+    "Github Actions"
+  ],
+  "engines": {
+    "node": ">=16.0.0"
+  },
+  "dependencies": {
+    "@actions/core": "^1.10.0",
+    "@actions/exec": "^1.1.1",
+    "bundle-dependencies": "^1.0.2",
+    "jsonfile": "^6.1.0",
+    "semver": "^7.5.1",
+    "version-bump-prompt": "^6.1.0"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.21.5",
+    "@babel/eslint-parser": "^7.16.0",
+    "@vercel/ncc": "^0.24.1",
+    "eslint": "^7.32.0",
+    "eslint-config-google": "^0.14.0"
+  },
+  "scripts": {
+    "lint": "eslint .",
+    "prepare": "ncc build prepare-release.js -o dist --source-map --license licenses.txt"
+  }
 }
