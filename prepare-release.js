@@ -84,10 +84,10 @@ const main = async () => {
 
     // bumping version
     await exec.exec('bump', [inputs.version, '--commit', inputs.syncMessage, '--all']);
+
     // tagging commits
-    for (const tag of inputs.syncTags.concat([inputs.version])) {
-      await exec.exec('git', ['tag', '--force', tag, '$(git log --pretty=format:"%h" -n 1)']);
-    }
+    const currentCommit = execSync('git', ['log', '--pretty', 'format:"%h"', '-n', '1'], {maxBuffer: 1024 * 1024 * 10, encoding: 'utf-8'});
+    for (const tag of inputs.syncTags.concat([inputs.version])) await exec.exec('git', ['tag', '--force', tag, currentCommit]);
 
     // log where we are at before we sync
     core.startGroup('Change information');
