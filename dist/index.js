@@ -4362,12 +4362,14 @@ const {execSync} = __webpack_require__(129);
 const main = async () => {
   // start by getting the inputs
   const inputs = getInputs();
+  console.log(process)
+  process.exit(1)
 
-  // dev
-  inputs.version = 'v1.0.0-riker.beta.1';
-  inputs.syncEmail = 'mike@lando.dev';
-  inputs.syncUsername = 'Mike Pirog';
-  inputs.syncBranch = 'pattern-riker-beta';
+  // You can use the below for dev purposes
+  // inputs.version = 'v1.0.0-riker.beta.1';
+  // inputs.syncEmail = 'mike@lando.dev';
+  // inputs.syncUsername = 'Mike Pirog';
+  // inputs.syncBranch = 'pattern-riker-beta';
 
   try {
     // validate that we have a version
@@ -4427,7 +4429,7 @@ const main = async () => {
     core.endGroup();
 
     // bumping version
-    await exec.exec('bump', [inputs.version, '--commit', inputs.syncMessage, '--all'])
+    await exec.exec('bump', [inputs.version, '--commit', inputs.syncMessage, '--all']);
     // tagging commits
     for (const tag of inputs.syncTags.concat([inputs.version])) {
       await exec.exec('git', ['tag', '--force', tag, '$(git log --pretty=format:"%h" -n 1)']);

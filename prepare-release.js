@@ -14,12 +14,11 @@ const main = async () => {
   // start by getting the inputs
   const inputs = getInputs();
 
-  // dev
+  // You can use the below for dev purposes
   // inputs.version = 'v1.0.0-riker.beta.1';
   // inputs.syncEmail = 'mike@lando.dev';
   // inputs.syncUsername = 'Mike Pirog';
   // inputs.syncBranch = 'pattern-riker-beta';
-  console.log(inputs);
 
   try {
     // validate that we have a version
@@ -30,8 +29,12 @@ const main = async () => {
     if (!fs.existsSync(`${inputs.root}/package.json`)) throw new Error(`Could not detect a package.json in ${inputs.root}`);
 
     // add local node bin to path so we can make use of stuff weve installed
-    core.addPath(path.resolve(__dirname, 'node_modules', '.bin'));
-    console.log(process.env.PATH);
+    // @NOTE: this location differs based on how we are calling it eg dist/index.js or directly
+    if (fs.existsSync(path.resolve(__dirname, '..', 'node_modules', '.bin'))) {
+      core.addPath(path.resolve(__dirname, '..', 'node_modules', '.bin'));
+    } else {
+      core.addPath(path.resolve(__dirname, 'node_modules', '.bin'));
+    }
 
     // configure git
     core.startGroup('Configuring git');
