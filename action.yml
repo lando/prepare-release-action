@@ -34,7 +34,7 @@ inputs:
   sync-email:
     description: "The email to use when syncing changes back to the repo."
     required: false
-    default: "github-actions@github.com"
+    default: "41898282+github-actions[bot]@users.noreply.github.com"
   sync-message:
     description: "The commit message to use when syncing changes back to the repo."
     required: false
@@ -45,7 +45,7 @@ inputs:
   sync-username:
     description: "The username to use when syncing changes back to the repo."
     required: false
-    default: "github-actions"
+    default: "github-actions[bot]"
 
 runs:
   using: "node16"
