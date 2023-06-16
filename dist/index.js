@@ -5569,7 +5569,7 @@ const main = async () => {
     await exec.exec('git', ['diff', 'HEAD~1']);
     core.endGroup();
 
-    // sync back to repo
+    // sync back to repo if applicable
     if (inputs.sync) {
       await exec.exec('git', ['push', 'origin', inputs.syncBranch]);
       for (const tag of tags) await exec.exec('git', ['push', '--force', 'origin', tag]);
