@@ -1,3 +1,7 @@
+## v2.0.1 - [June 16, 2023](https://github.com/lando/prepare-release-action/releases/tag/v2.0.1)
+
+* Fixed bug causing `bump` and `bundle-dependencies` to not be found
+
 ## v2.0.0 - [June 16, 2023](https://github.com/lando/prepare-release-action/releases/tag/v2.0.0)
 
 * First `v2` release
