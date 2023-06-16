@@ -1,0 +1,54 @@
+name: Options Tests
+
+on:
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ${{ matrix.os }}
+    env:
+      term: xterm
+    strategy:
+      fail-fast: false
+      matrix:
+        os:
+          - ubuntu-22.04
+        node-version:
+          - '16'
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      - name: Install node ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: npm
+      - name: Install deps and prep
+        run: |
+          npm ci
+          npm run prepare
+
+      - name: Prepare release
+        uses: ./
+        with:
+          version: v5.0.0
+          commands: npm run prepare
+          lando-plugin: false
+          root: ${{ github.workspace }}
+          sync: false
+          sync-email: william.t.riker@starfleet.mil
+          sync-message: Execute pattern Riker theta
+          sync-tags: v5
+          sync-username: Will
+
+      - name: "TEST: should set the correct version in the package.json"
+        if: always()
+        run: |
+          if cat "${{ github.workspace }}/package.json" | grep version | grep v5.0.0; then
+            echo "::notice title=TEST PASSED::Version set in package.json correctly"
+          else
+            echo "::error title=TEST FAILED!::Version not set in package.json correctly"
+            exit 2
+          fi
+        shell: bash
