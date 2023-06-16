@@ -28,17 +28,14 @@ jobs:
           node-version: ${{ matrix.node-version }}
           cache: npm
       - name: Install deps and prep
-        run: |
-          npm ci
-          npm run prepare
-          npm run lint
+        run: npm ci
 
       - name: Prepare release
         uses: ./
         with:
           version: ${{ matrix.version }}
+          commands: npm run prepare
+          sync-tags: v2
           sync: false
-          commands: |
-            echo "hello there"
-            pwd
+
 
