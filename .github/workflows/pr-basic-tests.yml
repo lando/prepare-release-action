@@ -18,6 +18,9 @@ jobs:
           - 1.0.0-beta.1
         node-version:
           - '16'
+        lando-plugin:
+          - true
+          - false
 
     steps:
       - name: Checkout code
@@ -35,6 +38,7 @@ jobs:
         with:
           version: ${{ matrix.version }}
           commands: npm run prepare
+          lando-plugin: ${{ matrix.lando-plugin }}
           sync-tags: v2
           sync: false
 
