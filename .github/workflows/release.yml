@@ -33,7 +33,7 @@ jobs:
           npm ci
           npm run lint
           npm run prepare
-      - name: Bump release
+      - name: Prepare release
         uses: ./
         with:
           commands: npm run prepare
