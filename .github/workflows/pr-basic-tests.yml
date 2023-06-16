@@ -34,11 +34,13 @@ jobs:
         run: npm ci
       - name: Make into a Lando Plugin
         uses: actions/github-script@v6
+        env:
+          PJSON: ${{ github.workspace }}/package.json
         with:
           script: |
             const fs = require('fs');
             const path = require('path');
-            const pjson = require('package.json');
+            const pjson = require(process.env.PJSON);
             pjson.lando = {};
             fs.writeFileSync('package.json', pjson);
 
