@@ -40,7 +40,7 @@ jobs:
           root: ${{ github.workspace }}
           sync: false
           sync-email: william.t.riker@starfleet.mil
-          sync-message: "FIRE "
+          sync-message: riker
           sync-tags: number1
           sync-username: Will
 
@@ -91,7 +91,7 @@ jobs:
       - name: "TEST: should set git message correctly"
         if: always()
         run: |
-          if git --no-pager log -1 | grep "FIRE 5.0.0"; then
+          if git --no-pager log -1 | grep "riker5.0.0"; then
             echo "::notice title=TEST PASSED::Git message set correctly"
           else
             echo "::error title=TEST FAILED!::Git message not set correctly"
