@@ -32,6 +32,15 @@ jobs:
           cache: npm
       - name: Install deps and prep
         run: npm ci
+      - name: Make into a Lando Plugin
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const fs = require('fs');
+            const path = require('path');
+            const pjson = require('package.json');
+            pjson.lando = {};
+            fs.writeFileSync('package.json', pjson);
 
       - name: Prepare release
         uses: ./
@@ -39,7 +48,9 @@ jobs:
           version: ${{ matrix.version }}
           commands: npm run prepare
           lando-plugin: ${{ matrix.lando-plugin }}
-          sync-tags: v2
+          sync-tags: |
+            v2
+            kirk-epsilon
           sync: false
 
 
