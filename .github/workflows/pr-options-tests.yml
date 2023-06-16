@@ -40,7 +40,7 @@ jobs:
           root: ${{ github.workspace }}
           sync: false
           sync-email: william.t.riker@starfleet.mil
-          sync-message: Execute pattern Riker theta %s
+          sync-message: FIRE
           sync-tags: number1
           sync-username: Will
 
@@ -69,7 +69,7 @@ jobs:
       - name: "TEST: should run the commands successfully"
         if: always()
         run: |
-          if stat riker && stat picard1; then
+          if stat riker && stat picard; then
             echo "::notice title=TEST PASSED::Commands ran successfully"
           else
             echo "::error title=TEST FAILED!::Commands did not run successfully"
@@ -85,5 +85,16 @@ jobs:
           else
             echo "::error title=TEST FAILED!::Git user and email config not set correctly"
             exit 4
+          fi
+        shell: bash
+
+      - name: "TEST: should set git message correctly"
+        if: always()
+        run: |
+          if git --no-pager log -1 | grep "FIRE v5.0.0"; then
+            echo "::notice title=TEST PASSED::Git message set correctly"
+          else
+            echo "::error title=TEST FAILED!::Git message not set correctly"
+            exit 5
           fi
         shell: bash
