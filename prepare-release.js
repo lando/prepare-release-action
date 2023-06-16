@@ -5,7 +5,6 @@ const exec = require('@actions/exec');
 const fs = require('fs');
 const getInputs = require('./lib/get-inputs');
 const isLandoPlugin = require('./lib/is-lando-plugin');
-const io = require('@actions/io');
 const jsonfile = require('jsonfile');
 const path = require('path');
 const semverClean = require('semver/functions/clean');
