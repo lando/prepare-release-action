@@ -37,6 +37,7 @@ jobs:
         uses: ./
         with:
           version: ${{ matrix.version }}
+          sync: false
           commands: |
             echo "hello there"
             pwd

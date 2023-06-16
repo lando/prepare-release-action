@@ -4,6 +4,7 @@ const core = require('@actions/core');
 const exec = require('@actions/exec');
 const fs = require('fs');
 const getInputs = require('./lib/get-inputs');
+const isLandoPlugin = require('./lib/is-lando-plugin');
 const path = require('path');
 const semverClean = require('semver/functions/clean');
 const semverValid = require('semver/functions/valid');
@@ -13,12 +14,6 @@ const {execSync} = require('child_process');
 const main = async () => {
   // start by getting the inputs
   const inputs = getInputs();
-
-  // You can use the below for dev purposes
-  // inputs.version = 'v1.0.0-riker.beta.1';
-  // inputs.syncEmail = 'mike@lando.dev';
-  // inputs.syncUsername = 'Mike Pirog';
-  // inputs.syncBranch = 'pattern-riker-beta';
 
   try {
     // validate that we have a version
@@ -52,42 +47,29 @@ const main = async () => {
     await exec.exec('git', ['checkout', inputs.syncBranch]);
     core.endGroup();
 
-    // - name: Bundle dependencies
-    //   shell: bash
-    //   if: ${{ inputs.bundle-deps == "true" }}
-    //   run: |
-    //     bundle-dependencies update
-    //     echo "Bundled dependencies:"
-    //     bundle-dependencies list-bundled-dependencies
-    // - name: Lando Plugin stuff
-    //   if: ${{ inputs.validate-plugin == "true" }}
-    //   uses: actions/github-script@v6
-    //   env:
-    //     PJSON_LOCATION: ${{ github.workspace }}/package.json
-    //   with:
-    //     script: |
-    //       const pjsonLocation = process.env.PJSON_LOCATION;
-    //       const pjson = require(pjsonLocation);
-    //       const hasLandoKeyword = Array.isArray(pjson.keywords) && (pjson.keywords.includes("lando") || pjson.keywords.includes("lando-plugin"));
-    //       if (hasLandoKeyword) {
-    //         // Add in GitHub output https://docs.github.com/en/actions/using-workflows/workflow-commands-for-github-actions
-    //         core.info("Confirmed this is a Lando plugin.")
-    //         process.exit(0);
-    //       } else {
-    //         core.setFailed("Invalid Lando plugin; required keywords not detected in package.json.");
-    //       }
+    // if using landoPlugin ez-mode then also bundle deps
+    if (inputs.landoPlugin) {
+      await exec.exec('bundle-dependencies', ['update']);
+      await exec.exec('bundle-dependencies', ['list-bundled-dependencies']);
+    }
 
-    // running user specified commands
-    core.startGroup('Running commands');
+    // run user specified commands
     for (const command of inputs.commands) await exec.exec(command);
-    core.endGroup();
 
-    // bumping version
+    // bump version
     await exec.exec('bump', [inputs.version, '--commit', inputs.syncMessage, '--all']);
 
-    // tagging commits
+    // get helpful stuff
     const currentCommit = execSync('git log --pretty=format:\'%h\' -n 1', {maxBuffer: 1024 * 1024 * 10, encoding: 'utf-8'});
-    for (const tag of inputs.syncTags.concat([inputs.version])) await exec.exec('git', ['tag', '--force', tag, currentCommit.trim()]);
+    const tags = inputs.syncTags.concat([inputs.version]);
+
+    // tag commits
+    for (const tag of tags) await exec.exec('git', ['tag', '--force', tag, currentCommit.trim()]);
+
+    // if using landoPlugin ez-mode then validate lando plugin
+    if (inputs.landoPlugin && !isLandoPlugin(require(path.join(inputs.root, 'package.json')))) {
+      throw new Error('Does not appear to be a valid Lando plugin! package.json must contain a lando key or the lando-plugin keyword');
+    }
 
     // log where we are at before we sync
     core.startGroup('Change information');
@@ -97,8 +79,10 @@ const main = async () => {
     core.endGroup();
 
     // sync back to repo
-    // # git push origin ${{ github.event.release.target_commitish }}
-    // # git push --force origin ${tag}
+    if (inputs.sync) {
+      await exec.exec('git', ['push', 'origin', inputs.syncBranch]);
+      for (const tag of tags) await exec.exec('git', ['push', '--force', 'origin', tag]);
+    }
 
   // catch
   } catch (error) {
