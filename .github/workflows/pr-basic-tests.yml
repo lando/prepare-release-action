@@ -45,6 +45,8 @@ jobs:
             const pjson = require(process.env.PJSON);
             pjson.lando = {};
             fs.writeFileSync(process.env.PJSON, JSON.stringify(pjson, null, 2));
+            console.log(process.env.PJSON);
+            console.log(require(process.env.PJSON));
 
       - name: Prepare release
         uses: ./
