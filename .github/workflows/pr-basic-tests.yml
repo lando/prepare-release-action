@@ -42,10 +42,7 @@ jobs:
             const path = require('path');
             const pjson = require(process.env.PJSON);
             pjson.lando = {};
-            console.log(JSON.stringify(pjson, null, 2));
-
             fs.writeFileSync('package.json', JSON.stringify(pjson, null, 2));
-            console.log(require(process.env.PJSON));
 
       - name: Prepare release
         uses: ./
