@@ -15,10 +15,11 @@ const main = async () => {
   const inputs = getInputs();
 
   // dev
-  inputs.version = 'v1.0.0-riker.beta.1';
-  inputs.syncEmail = 'mike@lando.dev';
-  inputs.syncUsername = 'Mike Pirog';
-  inputs.syncBranch = 'pattern-riker-beta';
+  // inputs.version = 'v1.0.0-riker.beta.1';
+  // inputs.syncEmail = 'mike@lando.dev';
+  // inputs.syncUsername = 'Mike Pirog';
+  // inputs.syncBranch = 'pattern-riker-beta';
+  console.log(inputs);
 
   try {
     // validate that we have a version
@@ -30,6 +31,7 @@ const main = async () => {
 
     // add local node bin to path so we can make use of stuff weve installed
     core.addPath(path.resolve(__dirname, 'node_modules', '.bin'));
+    console.log(process.env.PATH);
 
     // configure git
     core.startGroup('Configuring git');
