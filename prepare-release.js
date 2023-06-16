@@ -5,6 +5,7 @@ const exec = require('@actions/exec');
 const fs = require('fs');
 const getInputs = require('./lib/get-inputs');
 const isLandoPlugin = require('./lib/is-lando-plugin');
+const jsonfile = require('jsonfile');
 const path = require('path');
 const semverClean = require('semver/functions/clean');
 const semverValid = require('semver/functions/valid');
@@ -14,6 +15,8 @@ const {execSync} = require('child_process');
 const main = async () => {
   // start by getting the inputs
   const inputs = getInputs();
+  // add more
+  inputs.pjson = path.join(inputs.root, 'package.json');
 
   try {
     // validate that we have a version
@@ -21,7 +24,7 @@ const main = async () => {
     // and that it is semantically valid
     if (semverValid(semverClean(inputs.version)) === null) throw new Error('Version must be semver valid!');
     // and that we have a package.json
-    if (!fs.existsSync(`${inputs.root}/package.json`)) throw new Error(`Could not detect a package.json in ${inputs.root}`);
+    if (!fs.existsSync(inputs.pjson)) throw new Error(`Could not detect a package.json in ${inputs.root}`);
 
     // add local node bin to path so we can make use of stuff weve installed
     // @NOTE: this location differs based on how we are calling it eg dist/index.js or directly
@@ -67,7 +70,8 @@ const main = async () => {
     for (const tag of tags) await exec.exec('git', ['tag', '--force', tag, currentCommit.trim()]);
 
     // if using landoPlugin ez-mode then validate lando plugin
-    if (inputs.landoPlugin && !isLandoPlugin(require(path.join(inputs.root, 'package.json')))) {
+    console.log(jsonfile.readFileSync(inputs.pjson));
+    if (inputs.landoPlugin && !isLandoPlugin(jsonfile.readFileSync(inputs.pjson))) {
       throw new Error('Does not appear to be a valid Lando plugin! package.json must contain a lando key or the lando-plugin keyword');
     }
 
