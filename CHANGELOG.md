@@ -1,3 +1,7 @@
+## v2.0.3 - [June 17, 2023](https://github.com/lando/prepare-release-action/releases/tag/v2.0.3)
+
+* Changed default `sync-message` to include `v` prefix
+
 ## v2.0.2 - [June 17, 2023](https://github.com/lando/prepare-release-action/releases/tag/v2.0.2)
 
 * Changed default `sync-message` to include `v` prefix
