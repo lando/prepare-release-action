@@ -1,3 +1,7 @@
+## v2.0.2 - [June 17, 2023](https://github.com/lando/prepare-release-action/releases/tag/v2.0.2)
+
+* Change default `sync-message` to
+
 ## v2.0.1 - [June 16, 2023](https://github.com/lando/prepare-release-action/releases/tag/v2.0.1)
 
 * Fixed bug causing `bump` and `bundle-dependencies` to not be found
