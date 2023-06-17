@@ -23,9 +23,10 @@ All inputs are optional however if you are **NOT** triggering this action on a `
 
 Note that `sync` must be set to `true` for the other `sync-*` options to do anything. Also note that in `sync-message` you can use `%s` as a placeholder for the version.
 
-## Notes
+## Caveats
 
-We do expand the initial shallow clone that's the default for `actions/checkout` to a full clone in order to re-commit the "bumped" version of your plugin.
+* If your project is a shallow clone (as is the default for `@actions/checkout`) we will `--unshallow` it to a full clone in order to sync changes.
+* If you have [branch](https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/managing-protected-branches/managing-a-branch-protection-rule) or [tag protection](https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/managing-repository-settings/configuring-tag-protection-rules) turned on you will need to make sure your rules allow the `sync-user` to both write to the `sync-branch` and to allow a `--force` alteration of the repos tags.
 
 ##  Usage
 
