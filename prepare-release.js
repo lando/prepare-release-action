@@ -23,7 +23,7 @@ const main = async () => {
     // if version is dev then attempt to describe tag/version
     if (inputs.version === 'dev') inputs.version = getStdOut('git describe --tags --always --abbrev=1 --match="v[0-9].*"');
     // and that it is semantically valid
-    if (semverValid(semverClean(inputs.version)) === null) throw new Error('Version must be semver valid!');
+    if (semverValid(semverClean(inputs.version)) === null) throw new Error(`Version ${inputs.version} must be semver valid!`);
     // and that we have a package.json
     if (!fs.existsSync(inputs.pjson)) throw new Error(`Could not detect a package.json in ${inputs.root}`);
 
