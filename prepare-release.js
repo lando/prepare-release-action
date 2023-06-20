@@ -4,13 +4,12 @@ const core = require('@actions/core');
 const exec = require('@actions/exec');
 const fs = require('fs');
 const getInputs = require('./lib/get-inputs');
+const getStdOut = require('./lib/get-stdout');
 const isLandoPlugin = require('./lib/is-lando-plugin');
 const jsonfile = require('jsonfile');
 const path = require('path');
 const semverClean = require('semver/functions/clean');
 const semverValid = require('semver/functions/valid');
-
-const {execSync} = require('child_process');
 
 const main = async () => {
   // start by getting the inputs
@@ -19,10 +18,23 @@ const main = async () => {
   inputs.pjson = path.join(inputs.root, 'package.json');
 
   try {
+    // get status of shallowness
+    const isShallow = getStdOut('git rev-parse --is-shallow-repository');
+
+    // if a shallow repo then unshallow and fetch all
+    if (isShallow === 'true') {
+      core.startGroup('Configuring repo');
+      await exec.exec('git', ['fetch', '--unshallow']);
+      await exec.exec('git', ['fetch', '--all']);
+      core.endGroup();
+    }
+
     // validate that we have a version
     if (!inputs.version) throw new Error('Version is a required input!');
+    // if version is dev then attempt to describe tag/version
+    if (inputs.version === 'dev') inputs.version = getStdOut(`git describe --tags --always --abbrev=1 --match="${inputs.versionMatch}"`);
     // and that it is semantically valid
-    if (semverValid(semverClean(inputs.version)) === null) throw new Error('Version must be semver valid!');
+    if (semverValid(semverClean(inputs.version)) === null) throw new Error(`Version ${inputs.version} must be semver valid!`);
     // and that we have a package.json
     if (!fs.existsSync(inputs.pjson)) throw new Error(`Could not detect a package.json in ${inputs.root}`);
 
@@ -30,24 +42,16 @@ const main = async () => {
     core.startGroup('Ensuring utils');
     await exec.exec('npm', ['install', '--global', 'bundle-dependencies@1.0.2']);
     await exec.exec('npm', ['install', '--global', 'version-bump-prompt@6.1.0']);
-    const prefix = execSync('npm config get prefix', {maxBuffer: 1024 * 1024 * 10, encoding: 'utf-8'});
-    const binDir = path.join(prefix.trim(), 'bin');
+    const binDir = path.join(getStdOut('npm config get prefix'), 'bin');
     core.info(`bin-dir: ${binDir}`);
     await exec.exec('ls', ['-lsa', binDir]);
     core.endGroup();
 
     // configure git
     core.startGroup('Configuring git');
-    // get status of shallowness
-    const isShallow = execSync('git rev-parse --is-shallow-repository', {maxBuffer: 1024 * 1024 * 10, encoding: 'utf-8'});
     // set user/email
     await exec.exec('git', ['config', 'user.name', inputs.syncUsername]);
     await exec.exec('git', ['config', 'user.email', inputs.syncEmail]);
-    // if a shallow repo then unshallow and fetch all
-    if (isShallow.trim() === 'true') {
-      await exec.exec('git', ['fetch', '--unshallow']);
-      await exec.exec('git', ['fetch', '--all']);
-    }
     // check out correct branch
     await exec.exec('git', ['checkout', inputs.syncBranch]);
     core.endGroup();
@@ -65,11 +69,11 @@ const main = async () => {
     await exec.exec(`${binDir}/bump`, [inputs.version, '--commit', inputs.syncMessage, '--all']);
 
     // get helpful stuff
-    const currentCommit = execSync('git log --pretty=format:\'%h\' -n 1', {maxBuffer: 1024 * 1024 * 10, encoding: 'utf-8'});
+    const currentCommit = getStdOut('git log --pretty=format:\'%h\' -n 1');
     const tags = inputs.syncTags.concat([inputs.version]);
 
     // tag commits
-    for (const tag of tags) await exec.exec('git', ['tag', '--force', tag, currentCommit.trim()]);
+    for (const tag of tags) await exec.exec('git', ['tag', '--force', tag, currentCommit]);
 
     // if using landoPlugin ez-mode then validate lando plugin
     if (inputs.landoPlugin && !isLandoPlugin(jsonfile.readFileSync(inputs.pjson))) {

@@ -46,6 +46,10 @@ inputs:
     description: "The username to use when syncing changes back to the repo."
     required: false
     default: "github-actions[bot]"
+  version-match:
+    description: "A regex to help find the latest tag. Only used when version=dev."
+    required: false
+    default: "v[0-9].*"
 
 runs:
   using: "node16"
