@@ -44,6 +44,7 @@ Note that `sync` must be set to `true` for the other `sync-*` options to do anyt
 ```yaml
 - name: Prepare Release
   uses: lando/prepare-release-action@v2
+  with:
     lando-plugin: true
 ```
 
@@ -52,6 +53,7 @@ Note that `sync` must be set to `true` for the other `sync-*` options to do anyt
 ```yaml
 - name: Prepare Release
   uses: lando/prepare-release-action@v2
+  with:
     commands: |
       npm run prepare
     sync-tags: v2
@@ -62,6 +64,7 @@ Note that `sync` must be set to `true` for the other `sync-*` options to do anyt
 ```yaml
 - name: Prepare Release
   uses: lando/prepare-release-action@v2
+  with:
     version: v3.1.4-riker.1
     commands: |
       touch riker
