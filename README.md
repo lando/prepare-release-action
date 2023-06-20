@@ -79,6 +79,7 @@ Note that `sync` must be set to `true` for the other `sync-*` options to do anyt
       riker1
       number2
     sync-username: w.t.riker
+    version-match: "v[0-2].*"
 ```
 
 ## Changelog
