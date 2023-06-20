@@ -47,7 +47,7 @@ inputs:
     required: false
     default: "github-actions[bot]"
   version-match:
-    description: "A regex to help find the latest tag. Only used then version=dev"
+    description: "A regex to help find the latest tag. Only used when version=dev."
     required: false
     default: "v[0-9].*"
 
