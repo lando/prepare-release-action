@@ -18,6 +18,17 @@ const main = async () => {
   inputs.pjson = path.join(inputs.root, 'package.json');
 
   try {
+    // get status of shallowness
+    const isShallow = getStdOut('git rev-parse --is-shallow-repository');
+
+    // if a shallow repo then unshallow and fetch all
+    if (isShallow === 'true') {
+      core.startGroup('Configuring repo');
+      await exec.exec('git', ['fetch', '--unshallow']);
+      await exec.exec('git', ['fetch', '--all']);
+      core.endGroup();
+    }
+
     // validate that we have a version
     if (!inputs.version) throw new Error('Version is a required input!');
     // if version is dev then attempt to describe tag/version
@@ -38,16 +49,9 @@ const main = async () => {
 
     // configure git
     core.startGroup('Configuring git');
-    // get status of shallowness
-    const isShallow = getStdOut('git rev-parse --is-shallow-repository');
     // set user/email
     await exec.exec('git', ['config', 'user.name', inputs.syncUsername]);
     await exec.exec('git', ['config', 'user.email', inputs.syncEmail]);
-    // if a shallow repo then unshallow and fetch all
-    if (isShallow === 'true') {
-      await exec.exec('git', ['fetch', '--unshallow']);
-      await exec.exec('git', ['fetch', '--all']);
-    }
     // check out correct branch
     await exec.exec('git', ['checkout', inputs.syncBranch]);
     core.endGroup();
