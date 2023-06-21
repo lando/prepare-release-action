@@ -71,13 +71,13 @@ const main = async () => {
     await exec.exec(`${binDir}/bump`, [inputs.version, '--commit', inputs.syncMessage, '--all']);
 
     // get helpful stuff
-    const currentCommit = getStdOut('git log --pretty=format:\'%h\' -n 1');
+    const currentCommit = getStdOut('git --no-pager log --pretty=format:%h -n 1');
     const tags = inputs.syncTags.concat([inputs.version]);
 
     console.log(currentCommit);
     console.log(currentCommit.replaceAll('\'', ''));
 
-    // tag commits
+    // tag commits, for some reason windows
     for (const tag of tags) await exec.exec('git', ['tag', '--force', tag, currentCommit]);
 
     // if using landoPlugin ez-mode then validate lando plugin
