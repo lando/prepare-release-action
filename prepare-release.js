@@ -70,11 +70,11 @@ const main = async () => {
     // bump version
     await exec.exec(`${binDir}/bump`, [inputs.version, '--commit', inputs.syncMessage, '--all']);
 
-    // get helpful stuff
+    // get helpful stuff, for some reasons windows interprets the format wrapping quptes literally?
     const currentCommit = getStdOut('git --no-pager log --pretty=format:%h -n 1');
     const tags = inputs.syncTags.concat([inputs.version]);
 
-    // tag commits, for some reason windows
+    // tag commits
     for (const tag of tags) await exec.exec('git', ['tag', '--force', tag, currentCommit]);
 
     // if using landoPlugin ez-mode then validate lando plugin
