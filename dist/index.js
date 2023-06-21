@@ -5551,7 +5551,9 @@ const main = async () => {
     core.startGroup('Ensuring utils');
     await exec.exec('npm', ['install', '--global', 'bundle-dependencies@1.0.2']);
     await exec.exec('npm', ['install', '--global', 'version-bump-prompt@6.1.0']);
-    const binDir = path.join(getStdOut('npm config get prefix'), 'bin');
+    // @NOTE: windows uses prefix and posix uses prefix/bin, not sure why that is
+    const prefix = getStdOut('npm config get prefix');
+    const binDir = process.platform === 'win32' ? prefix : path.join(prefix, 'bin');
     core.info(`bin-dir: ${binDir}`);
     await exec.exec('ls', ['-lsa', binDir]);
     core.endGroup();
@@ -5577,8 +5579,8 @@ const main = async () => {
     // bump version
     await exec.exec(`${binDir}/bump`, [inputs.version, '--commit', inputs.syncMessage, '--all']);
 
-    // get helpful stuff
-    const currentCommit = getStdOut('git log --pretty=format:\'%h\' -n 1');
+    // get helpful stuff, for some reasons windows interprets the format wrapping quptes literally?
+    const currentCommit = getStdOut('git --no-pager log --pretty=format:%h -n 1');
     const tags = inputs.syncTags.concat([inputs.version]);
 
     // tag commits
