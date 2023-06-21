@@ -74,9 +74,6 @@ const main = async () => {
     const currentCommit = getStdOut('git --no-pager log --pretty=format:%h -n 1');
     const tags = inputs.syncTags.concat([inputs.version]);
 
-    console.log(currentCommit);
-    console.log(currentCommit.replaceAll('\'', ''));
-
     // tag commits, for some reason windows
     for (const tag of tags) await exec.exec('git', ['tag', '--force', tag, currentCommit]);
 
