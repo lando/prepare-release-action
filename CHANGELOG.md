@@ -1,3 +1,7 @@
+## v2.1.1 - [June 21, 2023](https://github.com/lando/prepare-release-action/releases/tag/v2.1.1)
+
+* Fixed bug causing action to fail when running on a `windows` runner
+
 ## v2.1.0 - [June 20, 2023](https://github.com/lando/prepare-release-action/releases/tag/v2.1.0)
 
 * Added support for `dev` releases

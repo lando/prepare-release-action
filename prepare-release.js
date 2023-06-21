@@ -42,7 +42,9 @@ const main = async () => {
     core.startGroup('Ensuring utils');
     await exec.exec('npm', ['install', '--global', 'bundle-dependencies@1.0.2']);
     await exec.exec('npm', ['install', '--global', 'version-bump-prompt@6.1.0']);
-    const binDir = path.join(getStdOut('npm config get prefix'), 'bin');
+    // @NOTE: windows uses prefix and posix uses prefix/bin, not sure why that is
+    const prefix = getStdOut('npm config get prefix');
+    const binDir = process.platform === 'win32' ? prefix : path.join(prefix, 'bin');
     core.info(`bin-dir: ${binDir}`);
     await exec.exec('ls', ['-lsa', binDir]);
     core.endGroup();
