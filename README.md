@@ -11,7 +11,7 @@ All inputs are optional however if you are **NOT** triggering this action on a `
 | Name | Description | Default | Example |
 |---|---|---|---|
 | `version` | The version of the thing to be released. Must be a semver valid string. | `${{ github.event.release.tag_name }}` | `v3.14.0` |
-| `bundle-dependencies` | Whether to `npm pack` `node_modules` into your release. Sets `bundleDependencies`.| `false` | `true` |
+| `bundle-dependencies` | A toggle to autoset `bundleDependencies` in `package.json`. | `false` | `true` |
 | `commands` | A list of commands to run to prepare the release. | `[]` | `npm run prepare` |
 | `root` | The location of the code being prepared for release. | `${{ github.workspace }}` | `/path/to/my/project` |
 | `sync` | A toggle to enable/disable code syncing. | `true` | `false` |

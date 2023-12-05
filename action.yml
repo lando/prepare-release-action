@@ -12,6 +12,10 @@ inputs:
     default: ${{ github.event.release.tag_name }}
 
   # Optional
+  bundle-dependencies:
+    description: "A toggle to autoset bundleDependencies in package.json."
+    required: false
+    default: false
   commands:
     description: "A list of commands to run to prepare the release."
     required: false
