@@ -30,12 +30,12 @@ jobs:
           cache: npm
       - name: Install deps and prep
         run: |
-          npm ci
+          npm clean-install
           npm run lint
           npm run prepare
       - name: Prepare release
         uses: ./
         with:
           commands: npm run prepare
-          sync-tags: v2
+          sync-tags: v3
 

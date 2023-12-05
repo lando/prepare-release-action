@@ -18,7 +18,7 @@ jobs:
           - 1.0.0-beta.1
           - dev
         node-version:
-          - '16'
+          - '18'
         lando-plugin:
           - true
           - false
@@ -33,7 +33,7 @@ jobs:
           cache: npm
       - name: Install deps and prep
         run: |
-          npm ci
+          npm clean-install
           npm run prepare
       - name: Make into a Lando Plugin
         uses: actions/github-script@v6

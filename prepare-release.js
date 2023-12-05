@@ -37,11 +37,13 @@ const main = async () => {
     if (semverValid(semverClean(inputs.version)) === null) throw new Error(`Version ${inputs.version} must be semver valid!`);
     // and that we have a package.json
     if (!fs.existsSync(inputs.pjson)) throw new Error(`Could not detect a package.json in ${inputs.root}`);
+    // if bundle-deps is false but lando-plugin is try then really bundle-deps is also true
+    if (!inputs.bundleDependencies && inputs.landoPlugin) inputs.bundleDependencies = true;
 
     // add global utils, we do this regardless so we can invoke directly and control the version
     core.startGroup('Ensuring utils');
     await exec.exec('npm', ['install', '--global', 'bundle-dependencies@1.0.2']);
-    await exec.exec('npm', ['install', '--global', 'version-bump-prompt@6.1.0']);
+    if (inputs.bundleDependencies) await exec.exec('npm', ['install', '--global', 'version-bump-prompt@6.1.0']);
     // @NOTE: windows uses prefix and posix uses prefix/bin, not sure why that is
     const prefix = getStdOut('npm config get prefix');
     const binDir = process.platform === 'win32' ? prefix : path.join(prefix, 'bin');
@@ -57,12 +59,6 @@ const main = async () => {
     // check out correct branch
     await exec.exec('git', ['checkout', inputs.syncBranch]);
     core.endGroup();
-
-    // if using landoPlugin ez-mode then also bundle deps
-    if (inputs.landoPlugin) {
-      await exec.exec(`${binDir}/bundle-dependencies`, ['update']);
-      await exec.exec(`${binDir}/bundle-dependencies`, ['list-bundled-dependencies']);
-    }
 
     // run user specified commands
     for (const command of inputs.commands) await exec.exec(command);
@@ -93,6 +89,12 @@ const main = async () => {
     if (inputs.sync) {
       await exec.exec('git', ['push', 'origin', inputs.syncBranch]);
       for (const tag of tags) await exec.exec('git', ['push', '--force', 'origin', tag]);
+    }
+
+    // finally bundle deps if we need to
+    if (inputs.bundleDependencies) {
+      await exec.exec(`${binDir}/bundle-dependencies`, ['update']);
+      await exec.exec(`${binDir}/bundle-dependencies`, ['list-bundled-dependencies']);
     }
 
   // catch

@@ -16,7 +16,7 @@ jobs:
           - ubuntu-22.04
           - macos-12
         node-version:
-          - '16'
+          - '18'
 
     steps:
       - name: Checkout code
@@ -28,7 +28,7 @@ jobs:
           cache: npm
       - name: Install deps and prep
         run: |
-          npm ci
+          npm clean-install
           npm run prepare
 
       - name: Prepare release
