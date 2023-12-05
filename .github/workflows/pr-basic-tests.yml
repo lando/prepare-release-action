@@ -17,6 +17,9 @@ jobs:
           - v0.0.1-riker.1
           - 1.0.0-beta.1
           - dev
+        bundle-dependencies:
+          - true
+          - false
         node-version:
           - '18'
         lando-plugin:
@@ -51,6 +54,7 @@ jobs:
         uses: ./
         with:
           version: ${{ matrix.version }}
+          bundle-dependencies: ${{ matrix.bundle-dependencies }}
           commands: npm run prepare
           lando-plugin: ${{ matrix.lando-plugin }}
           sync-tags: |
