@@ -17,8 +17,11 @@ jobs:
           - v0.0.1-riker.1
           - 1.0.0-beta.1
           - dev
+        bundle-dependencies:
+          - true
+          - false
         node-version:
-          - '16'
+          - '18'
         lando-plugin:
           - true
           - false
@@ -33,7 +36,7 @@ jobs:
           cache: npm
       - name: Install deps and prep
         run: |
-          npm ci
+          npm clean-install
           npm run prepare
       - name: Make into a Lando Plugin
         uses: actions/github-script@v6
@@ -51,6 +54,7 @@ jobs:
         uses: ./
         with:
           version: ${{ matrix.version }}
+          bundle-dependencies: ${{ matrix.bundle-dependencies }}
           commands: npm run prepare
           lando-plugin: ${{ matrix.lando-plugin }}
           sync-tags: |

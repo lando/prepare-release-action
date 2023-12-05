@@ -1,3 +1,13 @@
+## v3.0.0 - [December 4, 2023](https://github.com/lando/prepare-release-action/releases/tag/v2.1.1)
+
+### New Features
+
+* Added `bundle-dependencies` input which will include your `node_modules` in the prepared release
+
+### **BREAKING CHANGES**
+
+* Changed `lando-plugin` so that it sets `bundle-dependencies` which now DOES NOT sync back changes `bundleDependencies`
+
 ## v2.1.1 - [June 21, 2023](https://github.com/lando/prepare-release-action/releases/tag/v2.1.1)
 
 * Fixed bug causing action to fail when using a `windows` runner

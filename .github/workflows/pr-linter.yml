@@ -11,7 +11,7 @@ jobs:
         os:
           - ubuntu-22.04
         node-version:
-          - '16'
+          - '18'
 
     steps:
       # Install deps and cache
@@ -23,7 +23,7 @@ jobs:
           node-version: ${{ matrix.node-version }}
           cache: npm
       - name: Install dependencies
-        run: npm ci
+        run: npm clean-install
 
       # Run the linter
       - name: Run code linter
