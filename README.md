@@ -75,6 +75,9 @@ Also note that `bundle-dependencies` runs _after_ sync eg it will not push chang
     commands: |
       touch riker
       npm run prepare
+    meta: |
+      jazzman=William T. Riker
+      bosmang=Picard
     lando-plugin: false
     sync: true
     sync-branch: kirk-epsilon
