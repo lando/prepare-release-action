@@ -30806,7 +30806,7 @@ const main = async () => {
       });
 
       // write and debug
-      jsonfile.writeFileSync(inputs.pjson, pjson);
+      jsonfile.writeFileSync(inputs.pjson, pjson, {spaces: 2});
       core.debug(`updated pjson`);
       core.debug(jsonfile.readFileSync(inputs.pjson));
     }
@@ -30830,13 +30830,12 @@ const main = async () => {
     // sync back to repo if applicable
     if (inputs.sync) {
       // log where we are at before we sync
-      core.startGroup('Change information');
+      core.startGroup('Sync changes information');
       await exec.exec('git', ['--no-pager', 'log', '-1']);
       await exec.exec('git', ['--no-pager', 'tag', '--points-at', 'HEAD']);
       await exec.exec('git', ['diff', 'HEAD~1']);
       core.endGroup();
 
-      // N*SYNC
       await exec.exec('git', ['push', 'origin', inputs.syncBranch]);
       for (const tag of tags) await exec.exec('git', ['push', '--force', 'origin', tag]);
     }
@@ -30870,11 +30869,18 @@ const main = async () => {
         }
 
         // write and debug
-        jsonfile.writeFileSync(inputs.pjson, pjson);
+        jsonfile.writeFileSync(inputs.pjson, pjson, {spaces: 2});
         core.debug(`added dist info to pjson`);
         core.debug(jsonfile.readFileSync(inputs.pjson));
       }
     }
+
+    // show all changes
+    core.startGroup('Change information');
+    await exec.exec('git', ['--no-pager', 'log', '-1']);
+    await exec.exec('git', ['--no-pager', 'tag', '--points-at', 'HEAD']);
+    await exec.exec('git', ['diff', 'HEAD~1']);
+    core.endGroup();
 
   // catch
   } catch (error) {
