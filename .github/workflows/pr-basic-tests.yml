@@ -38,18 +38,6 @@ jobs:
         run: |
           npm clean-install
           npm run prepare
-      - name: Make into a Lando Plugin
-        uses: actions/github-script@v6
-        env:
-          PJSON: ${{ github.workspace }}/package.json
-        with:
-          script: |
-            const fs = require('fs');
-            const path = require('path');
-            const pjson = require(process.env.PJSON);
-            pjson.lando = {};
-            fs.writeFileSync(process.env.PJSON, JSON.stringify(pjson, null, 2));
-
       - name: Prepare release
         uses: ./
         with:
