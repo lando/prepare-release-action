@@ -89,7 +89,7 @@ const main = async () => {
       });
 
       // write and debug
-      jsonfile.writeFileSync(inputs.pjson, pjson);
+      jsonfile.writeFileSync(inputs.pjson, pjson, {spaces: 2});
       core.debug(`updated pjson`);
       core.debug(jsonfile.readFileSync(inputs.pjson));
     }
@@ -152,7 +152,7 @@ const main = async () => {
         }
 
         // write and debug
-        jsonfile.writeFileSync(inputs.pjson, pjson);
+        jsonfile.writeFileSync(inputs.pjson, pjson, {spaces: 2});
         core.debug(`added dist info to pjson`);
         core.debug(jsonfile.readFileSync(inputs.pjson));
       }

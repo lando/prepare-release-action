@@ -74,7 +74,6 @@ jobs:
       - name: "TEST: should set the meta in the package.json"
         if: always()
         run: |
-          cat "${{ github.workspace }}/package.json"
           if cat "${{ github.workspace }}/package.json" | grep bosmang | grep Picard; then
             echo "::notice title=TEST PASSED::Meta set in package.json correctly"
           else
