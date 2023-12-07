@@ -30735,10 +30735,6 @@ const main = async () => {
   // add more
   inputs.pjson = path.join(inputs.root, 'package.json');
 
-  const data = JSON.parse(getStdOut(`npm pack --json --dry-run`));
-  console.log(data);
-  process.exit(1)
-
   try {
     // get status of shallowness
     const isShallow = getStdOut('git rev-parse --is-shallow-repository');
@@ -30863,32 +30859,22 @@ const main = async () => {
 
       // onyl add information if dist isnt already in there
       if (!pjson.dist) {
-        pjson.dist = {
-
+        try {
+          const dist = JSON.parse(getStdOut(`npm pack --json --dry-run`));
+          const {integrity, shasum, fileCount, unpackedSize, filename} = dist[0];
+          pjson.dist = {integrity, shasum, filename, fileCount, unpackedSize};
+        } catch (error) {
+          core.warning(`error getting dist information, not fatal, setting dist to ${inputs.version} instead`);
+          core.debug(error);
+          pjson.dist = inputs.version;
         }
+
+        // write and debug
+        jsonfile.writeFileSync(inputs.pjson, pjson);
+        core.debug(`added dist info to pjson`);
+        core.debug(jsonfile.readFileSync(inputs.pjson));
       }
-
-      // write and debug
-      jsonfile.writeFileSync(inputs.pjson, pjson);
-      core.debug(`updated pjson`);
-      core.debug(jsonfile.readFileSync(inputs.pjson));
     }
-    /*
-      "dist": {
-      "integrity": "sha512-5RB2OIQ1WuaKl/uKJGIrUY5tadsNDxVjrCZoFv+SD4HpRrSO6ioWDikAMkhZBuqtJH0qMoyyFLYeQy8q6ukbyQ==",
-      "shasum": "7ddada02ce92864da7db31c9fe4f171c02f54626",
-      "tarball": "https://registry.npmjs.org/@lando/php/-/php-0.10.2.tgz",
-      "fileCount": 2269,
-      "unpackedSize": 3232290,
-      "signatures": [
-        {
-          "keyid": "SHA256:jl3bwswu80PjjokCgh0o2w5c2U4LhQAE57gj9cz1kzA",
-          "sig": "MEYCIQCvDYYCZGzoS6xfhIsFCtsECwZ2F/oXK0MO6toLhmwP4wIhAKZZrjRUZIQO3FZUbQFXwMaUbEDcmYAKF1+ngAvpcj8l"
-        }
-      ]
-    },
-    */
-
 
   // catch
   } catch (error) {
