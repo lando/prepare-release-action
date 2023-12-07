@@ -21,6 +21,7 @@
     "@actions/core": "^1.10.0",
     "@actions/exec": "^1.1.1",
     "jsonfile": "^6.1.0",
+    "lodash.set": "^4.3.2",
     "semver": "^7.5.1"
   },
   "devDependencies": {

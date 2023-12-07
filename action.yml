@@ -23,6 +23,9 @@ inputs:
     description: "A special easy-mode setting to prepare and valdiate Lando plugins."
     required: false
     default: false
+  meta:
+    description: " A list of path=value strings to merge into the package.json"
+    required: false
   root:
     description: "The location of the code being prepared for release."
     required: false

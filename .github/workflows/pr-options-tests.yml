@@ -39,6 +39,9 @@ jobs:
             touch riker
             touch picard
           lando-plugin: false
+          meta: |
+            jazzman=William T. Riker
+            bosmang=Picard
           root: ${{ github.workspace }}
           sync: false
           sync-email: william.t.riker@starfleet.mil
@@ -53,6 +56,28 @@ jobs:
             echo "::notice title=TEST PASSED::Version set in package.json correctly"
           else
             echo "::error title=TEST FAILED!::Version not set in package.json correctly"
+            exit 1
+          fi
+        shell: bash
+
+      - name: "TEST: should set the meta in the package.json"
+        if: always()
+        run: |
+          if cat "${{ github.workspace }}/package.json" | grep jazzman | grep "William T. Riker"; then
+            echo "::notice title=TEST PASSED::Meta set in package.json correctly"
+          else
+            echo "::error title=TEST FAILED!::Meta not set in package.json correctly"
+            exit 1
+          fi
+        shell: bash
+
+      - name: "TEST: should set the meta in the package.json"
+        if: always()
+        run: |
+          if cat "${{ github.workspace }}/package.json" | grep bosmang | grep Picard; then
+            echo "::notice title=TEST PASSED::Meta set in package.json correctly"
+          else
+            echo "::error title=TEST FAILED!::Meta not set in package.json correctly"
             exit 1
           fi
         shell: bash

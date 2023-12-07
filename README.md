@@ -13,6 +13,7 @@ All inputs are optional however if you are **NOT** triggering this action on a `
 | `version` | The version of the thing to be released. Must be a semver valid string. | `${{ github.event.release.tag_name }}` | `v3.14.0` |
 | `bundle-dependencies` | A toggle to autoset `bundleDependencies` in `package.json`. | `false` | `true` |
 | `commands` | A list of commands to run to prepare the release. | `[]` | `npm run prepare` |
+| `meta` | A list of `path=value` strings to merge into the `package.json` | `null` | `dist=thing` |
 | `root` | The location of the code being prepared for release. | `${{ github.workspace }}` | `/path/to/my/project` |
 | `sync` | A toggle to enable/disable code syncing. | `true` | `false` |
 | `sync-branch` | The target branch to use when syncing changes back to the repo. | `${{ github.event.release.target_commitish \|\| github.event.pull_request.head.ref \|\| github.ref_name }}` | `main` |
@@ -74,6 +75,9 @@ Also note that `bundle-dependencies` runs _after_ sync eg it will not push chang
     commands: |
       touch riker
       npm run prepare
+    meta: |
+      jazzman=William T. Riker
+      bosmang=Picard
     lando-plugin: false
     sync: true
     sync-branch: kirk-epsilon

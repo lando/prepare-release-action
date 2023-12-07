@@ -1,4 +1,9 @@
-## v3.0.0 - [December 4, 2023](https://github.com/lando/prepare-release-action/releases/tag/v2.1.1)
+## v3.1.0 - [December 6, 2023](https://github.com/lando/prepare-release-action/releases/tag/v3.1.0)
+
+* Added a `meta` input so users can enter a list of `path=value` strings to merge into the `package.json`
+* Improved `lando-plugin` so that it adds the needed `dist` value to the `package.json`
+
+## v3.0.0 - [December 4, 2023](https://github.com/lando/prepare-release-action/releases/tag/v3.0.0)
 
 ### New Features
 
