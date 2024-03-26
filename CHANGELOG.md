@@ -1,3 +1,7 @@
+## v3.2.0 - [March 26, 2024](https://github.com/lando/prepare-release-action/releases/tag/v3.2.0)
+
+* Added a `sync-token` input to better control `git` sync operations
+
 ## v3.1.0 - [December 6, 2023](https://github.com/lando/prepare-release-action/releases/tag/v3.1.0)
 
 * Added a `meta` input so users can enter a list of `path=value` strings to merge into the `package.json`
