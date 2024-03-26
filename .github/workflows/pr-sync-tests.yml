@@ -22,6 +22,10 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
           cache: npm
+      - name: Install deps and prep
+        run: |
+          npm clean-install
+          npm run prepare
       - name: Prepare release
         uses: ./
         with:

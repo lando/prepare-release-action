@@ -30,7 +30,6 @@ jobs:
         run: |
           npm clean-install
           npm run prepare
-
       - name: Prepare release
         uses: ./
         with:
