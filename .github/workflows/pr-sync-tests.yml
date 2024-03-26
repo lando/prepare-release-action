@@ -4,7 +4,7 @@ on:
   pull_request:
 
 jobs:
-  lint:
+  sync-tests:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
@@ -22,21 +22,31 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
           cache: npm
+      - name: Install deps and prep
+        run: |
+          npm clean-install
+          npm run prepare
+      - name: Checkout fresh repo for testing
+        uses: actions/checkout@v3
+        with:
+          path: test
       - name: Prepare release
         uses: ./
         with:
-          version: v3.1.1
-          # commands: |
-          #   touch riker
-          #   touch picard
+          version: dev
+          commands: |
+            touch riker
+            touch picard
+            git pull origin main
           lando-plugin: false
-          # meta: |
-          #   jazzman=William T. Riker
-          #   bosmang=Picard
-          # root: ${{ github.workspace }}
+          meta: |
+            jazzman=William T. Riker
+            bosmang=Picard
+          root: ${{ github.workspace }}/test
           sync: true
-          sync-branch: main
+          sync-branch: test
           sync-email: william.t.riker@starfleet.mil
           sync-message: riker
           sync-tags: number1
+          sync-token: ${{ secrets.PREPARE_RELEASE_TOKEN }}
           sync-username: Will

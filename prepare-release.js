@@ -15,6 +15,9 @@ const set = require('lodash.set');
 const main = async () => {
   // start by getting the inputs
   const inputs = getInputs();
+  // switch cwd to inputs.root
+  process.chdir(inputs.root);
+
   // add more
   inputs.pjson = path.join(inputs.root, 'package.json');
 
@@ -25,6 +28,7 @@ const main = async () => {
     // if a shallow repo then unshallow and fetch all
     if (isShallow === 'true') {
       core.startGroup('Configuring repo');
+      core.info(`working-dir: ${process.cwd()}`);
       await exec.exec('git', ['fetch', '--unshallow']);
       await exec.exec('git', ['fetch', '--all']);
       core.endGroup();
@@ -121,11 +125,13 @@ const main = async () => {
 
       // construct auth string
       const basicCredential = Buffer.from(`x-access-token:${inputs.syncToken}`, 'utf8').toString('base64');
-      const authString = `http.https://github.com/.extraheader=AUTHORIZATION: basic ${basicCredential}`;
+      const authString = `AUTHORIZATION: basic ${basicCredential}`;
+      core.setSecret(basicCredential);
 
       // push updates
-      await exec.exec('git', ['-c', authString, 'push', 'origin', inputs.syncBranch]);
-      for (const tag of tags) await exec.exec('git', ['-c', authString, 'push', '--force', 'origin', tag]);
+      await exec.exec('git', ['config', '--local', 'http.https://github.com/.extraheader', authString]);
+      await exec.exec('git', ['push', 'origin', inputs.syncBranch]);
+      for (const tag of tags) await exec.exec('git', ['push', '--force', 'origin', tag]);
     }
 
     // bundle deps if we need to
