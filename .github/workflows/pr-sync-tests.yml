@@ -28,7 +28,7 @@ jobs:
       - name: Prepare release
         uses: ./
         with:
-          version: v3.1.0
+          version: v3.1.1
           # commands: |
           #   touch riker
           #   touch picard
