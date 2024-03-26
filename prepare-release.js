@@ -126,6 +126,7 @@ const main = async () => {
       // construct auth string
       const basicCredential = Buffer.from(`x-access-token:${inputs.syncToken}`, 'utf8').toString('base64');
       const authString = `AUTHORIZATION: basic ${basicCredential}`;
+      core.setSecret(basicCredential);
 
       // push updates
       await exec.exec('git', ['config', '--local', 'http.https://github.com/.extraheader', authString]);
