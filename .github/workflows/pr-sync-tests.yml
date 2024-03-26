@@ -26,14 +26,10 @@ jobs:
         run: |
           npm clean-install
           npm run prepare
-          pwd
       - name: Checkout fresh repo for testing
         uses: actions/checkout@v3
         with:
           path: test
-      - name: Where am i?
-        run: |
-          pwd
       - name: Prepare release
         uses: ./
         with:
@@ -52,5 +48,4 @@ jobs:
           sync-email: william.t.riker@starfleet.mil
           sync-message: riker
           sync-tags: number1
-          sync-token: ${{ secrets.PIROG_TOKEN }}
           sync-username: Will

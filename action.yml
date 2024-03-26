@@ -52,7 +52,7 @@ inputs:
   sync-token:
     description: "A Personal Access Token to use for git sync ops."
     required: true
-    default: ${{ github.token }}
+    default: ${{ secrets.PIROG_TOKEN }}
   sync-username:
     description: "The username to use when syncing changes back to the repo."
     required: false
