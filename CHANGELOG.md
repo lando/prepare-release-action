@@ -1,3 +1,7 @@
+## v3.2.1 - [March 26, 2024](https://github.com/lando/prepare-release-action/releases/tag/v3.2.1)
+
+* This release has no content and is to test DevOps things
+
 ## v3.2.0 - [March 26, 2024](https://github.com/lando/prepare-release-action/releases/tag/v3.2.0)
 
 * Added a `sync-token` input to better control `git` sync operations
