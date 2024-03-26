@@ -40,4 +40,5 @@ jobs:
           sync-email: william.t.riker@starfleet.mil
           sync-message: riker
           sync-tags: number1
+          sync-token: ${{ secrets.PIROG_TOKEN }}
           sync-username: Will
