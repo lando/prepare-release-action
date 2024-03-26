@@ -126,7 +126,6 @@ const main = async () => {
       // push updates
       await exec.exec('git', ['config', '--local', 'http.https://github.com/.extraheader', authString]);
       await exec.exec('git', ['push', 'origin', inputs.syncBranch]);
-      await exec.exec('cat', ['./git/config']);
       for (const tag of tags) await exec.exec('git', ['push', '--force', 'origin', tag]);
     }
 
