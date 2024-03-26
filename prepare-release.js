@@ -121,11 +121,13 @@ const main = async () => {
 
       // construct auth string
       const basicCredential = Buffer.from(`x-access-token:${inputs.syncToken}`, 'utf8').toString('base64');
-      const authString = `http.https://github.com/.extraheader=AUTHORIZATION: basic ${basicCredential}`;
+      const authString = `AUTHORIZATION: basic ${basicCredential}`;
 
       // push updates
-      await exec.exec('git', ['-c', authString, 'push', 'origin', inputs.syncBranch]);
-      for (const tag of tags) await exec.exec('git', ['-c', authString, 'push', '--force', 'origin', tag]);
+      await exec.exec('git', ['config', '--local', 'http.https://github.com/.extraheader', authString]);
+      await exec.exec('git', ['push', 'origin', inputs.syncBranch]);
+      await exec.exec('cat', ['./git/config']);
+      for (const tag of tags) await exec.exec('git', ['push', '--force', 'origin', tag]);
     }
 
     // bundle deps if we need to
