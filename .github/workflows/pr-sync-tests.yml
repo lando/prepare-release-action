@@ -37,7 +37,6 @@ jobs:
           commands: |
             touch riker
             touch picard
-            git pull origin main
           lando-plugin: false
           meta: |
             jazzman=William T. Riker
@@ -47,6 +46,8 @@ jobs:
           sync-branch: test
           sync-email: william.t.riker@starfleet.mil
           sync-message: riker
-          sync-tags: number1
-          sync-token: ${{ secrets.PREPARE_RELEASE_TOKEN }}
-          sync-username: Will
+          sync-tags: |
+            number1
+            v99
+          sync-token: ${{ secrets.RTFM47_COAXIUM_INJECTOR }}
+          sync-username: William T. Riker
