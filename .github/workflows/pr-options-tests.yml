@@ -16,7 +16,7 @@ jobs:
           - ubuntu-22.04
           - macos-12
         node-version:
-          - '18'
+          - '20'
 
     steps:
       - name: Checkout code
