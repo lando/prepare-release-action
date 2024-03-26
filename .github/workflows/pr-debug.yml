@@ -1,17 +1,12 @@
-name: Release
+name: Lint Code
 
 on:
-  release:
-    types:
-      - published
+  pull_request:
 
 jobs:
-  release:
+  lint:
     runs-on: ${{ matrix.os }}
-    env:
-      term: xterm
     strategy:
-      fail-fast: false
       matrix:
         os:
           - ubuntu-22.04
@@ -19,23 +14,22 @@ jobs:
           - '18'
 
     steps:
+      # Install deps and cache
       - name: Checkout code
         uses: actions/checkout@v3
         with:
+          token: ${{ secrets.PIROG_TOKEN }}
           fetch-depth: 0
+
       - name: Install node ${{ matrix.node-version }}
         uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node-version }}
           cache: npm
-      - name: Install deps and prep
+      - name: debug
         run: |
           npm clean-install
-          npm run lint
           npm run prepare
-      - name: Prepare release
-        uses: ./
-        with:
-          commands: npm run prepare
-          sync-tags: v3
+          cat ./.git/config
+
 
