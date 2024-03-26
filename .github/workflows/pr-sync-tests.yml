@@ -52,4 +52,4 @@ jobs:
             v99.11.12-beta.1
             v99.11.12
           sync-token: ${{ secrets.RTFM47_COAXIUM_INJECTOR }}
-          sync-username: William T Riker
+          sync-username: William T. Riker
