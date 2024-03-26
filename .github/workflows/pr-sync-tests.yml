@@ -37,7 +37,6 @@ jobs:
           commands: |
             touch riker
             touch picard
-            git pull origin main
           lando-plugin: false
           meta: |
             jazzman=William T. Riker
