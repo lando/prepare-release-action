@@ -3,9 +3,9 @@
 const core = require('@actions/core');
 const exec = require('@actions/exec');
 const fs = require('fs');
-const getInputs = require('./lib/get-inputs');
-const getStdOut = require('./lib/get-stdout');
-const isLandoPlugin = require('./lib/is-lando-plugin');
+const getInputs = require('./utils/get-inputs');
+const getStdOut = require('./utils/get-stdout');
+const isLandoPlugin = require('./utils/is-lando-plugin');
 const jsonfile = require('jsonfile');
 const path = require('path');
 const semverClean = require('semver/functions/clean');
@@ -119,6 +119,11 @@ const main = async () => {
       await exec.exec('git', ['diff', 'HEAD~1']);
       core.endGroup();
 
+      // Buffer.from(
+      //   `x-access-token:${this.settings.authToken}`,
+      //   'utf8'
+      // ).toString('base64')
+      // git -c "http.https://github.com/.extraheader=AUTHORIZATION: basic <basic_credential>" push https://github.com/owner/my-repo
       await exec.exec('git', ['push', 'origin', inputs.syncBranch]);
       for (const tag of tags) await exec.exec('git', ['push', '--force', 'origin', tag]);
     }
