@@ -15,6 +15,9 @@ const set = require('lodash.set');
 const main = async () => {
   // start by getting the inputs
   const inputs = getInputs();
+  // switch cwd to inputs.root
+  process.chdir(inputs.root);
+
   // add more
   inputs.pjson = path.join(inputs.root, 'package.json');
 
@@ -25,6 +28,7 @@ const main = async () => {
     // if a shallow repo then unshallow and fetch all
     if (isShallow === 'true') {
       core.startGroup('Configuring repo');
+      core.info(`working-dir: ${process.cwd()}`);
       await exec.exec('git', ['fetch', '--unshallow']);
       await exec.exec('git', ['fetch', '--all']);
       core.endGroup();

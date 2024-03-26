@@ -26,6 +26,14 @@ jobs:
         run: |
           npm clean-install
           npm run prepare
+          pwd
+      - name: Checkout fresh repo for testing
+        uses: actions/checkout@v3
+        with:
+          path: test
+      - name: Where am i?
+        run: |
+          pwd
       - name: Prepare release
         uses: ./
         with:
@@ -38,7 +46,7 @@ jobs:
           meta: |
             jazzman=William T. Riker
             bosmang=Picard
-          root: ${{ github.workspace }}
+          root: ${{ github.workspace }}/test
           sync: true
           sync-branch: test
           sync-email: william.t.riker@starfleet.mil
