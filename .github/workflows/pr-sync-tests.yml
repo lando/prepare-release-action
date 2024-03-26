@@ -48,5 +48,5 @@ jobs:
           sync-email: william.t.riker@starfleet.mil
           sync-message: riker
           sync-tags: number1
-          sync-token: ${{ secrets.PREPARE_RELEASE_TOKEN }}
+          sync-token: ${{ secrets.RTFM47_COAXIUM_INJECTOR }}
           sync-username: Will
