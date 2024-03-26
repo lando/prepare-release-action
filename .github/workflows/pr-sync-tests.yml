@@ -48,4 +48,4 @@ jobs:
           sync-message: riker
           sync-tags: number1
           sync-token: ${{ secrets.RTFM47_COAXIUM_INJECTOR }}
-          sync-username: William T Riker
+          sync-username: William T. Riker
