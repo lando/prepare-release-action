@@ -25,17 +25,18 @@ jobs:
       - name: Prepare release
         uses: ./
         with:
-          version: v3.1.1
-          # commands: |
-          #   touch riker
-          #   touch picard
+          version: v${{ env.RANDOM }}.0.0
+          commands: |
+            touch riker
+            touch picard
+            git pull origin main
           lando-plugin: false
-          # meta: |
-          #   jazzman=William T. Riker
-          #   bosmang=Picard
-          # root: ${{ github.workspace }}
+          meta: |
+            jazzman=William T. Riker
+            bosmang=Picard
+          root: ${{ github.workspace }}
           sync: true
-          sync-branch: main
+          sync-branch: test
           sync-email: william.t.riker@starfleet.mil
           sync-message: riker
           sync-tags: number1
