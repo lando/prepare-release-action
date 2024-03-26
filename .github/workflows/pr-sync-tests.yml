@@ -25,7 +25,7 @@ jobs:
       - name: Prepare release
         uses: ./
         with:
-          version: v${{ env.RANDOM }}.0.0
+          version: dev
           commands: |
             touch riker
             touch picard
