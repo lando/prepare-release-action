@@ -1,4 +1,4 @@
-## {{ UNRELEASED_VERSION }} - [{{ UNRELEASED_DATE }}]({{ UNRELEASED_LINK }})
+## {{ UNRELEASED_VERSION }} - [{{ UNRELEASED_DATE }}]({{ UNRELEASED_LINK }})## v3.3.0 - [2024-05-08T17:44:18Z](https://github.com/lando/prepare-release-action/releases/tag/v3.3.0)
 
 * Added `update-files`, `update-files-meta` and `update-files-header` inputs to help things like automatic `CHANGELOG.md` automation [#15](https://github.com/lando/prepare-release-action/issues/15)
 
