@@ -33,7 +33,7 @@ jobs:
           npm run lint
           npm run prepare
       - name: Export formatted release date
-        run: echo "RELEASE_DATE=$(date -d "${{ github.event.release.published_at }}" "+%B %e, %Y")" >> $GITHUB_ENV
+        run: echo "RELEASE_DATE=$(date -d "${{ github.event.release.published_at }}" "+%B %e, %Y" | tr -s ' ')" >> $GITHUB_ENV
       - name: Prepare release
         uses: ./
         with:
