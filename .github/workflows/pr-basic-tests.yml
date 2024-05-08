@@ -53,7 +53,7 @@ jobs:
           update-files-header: |
             ## {{ UNRELEASED_VERSION }} - [{{ UNRELEASED_DATE }}]({{ UNRELEASED_LINK }})
 
-          update-files-meta:
+          update-files-meta: |
             UNRELEASED_DATE=May 4, 3000
             UNRELEASED_LINK=${{ github.repositoryUrl }}
-            UNRELEASED_VERSION=v${{ github.run_id }}.${{ github.run_number }}.${{ github.run_attempt}}=${{ github.sha }}
+            UNRELEASED_VERSION=v${{ github.run_id }}.${{ github.run_number }}.${{ github.run_attempt}}-build.${{ github.sha }}

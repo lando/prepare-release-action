@@ -44,7 +44,7 @@ jobs:
           update-files-header: |
             ## {{ UNRELEASED_VERSION }} - [{{ UNRELEASED_DATE }}]({{ UNRELEASED_LINK }})
 
-          update-files-meta:
+          update-files-meta: |
             UNRELEASED_DATE=${{ github.event.release.published_at }}
             UNRELEASED_LINK=${{ github.event.release.html_url }}
             UNRELEASED_VERSION=${{ github.event.release.tag_name }}
