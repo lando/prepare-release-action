@@ -135,16 +135,27 @@ const main = async () => {
         core.info(`{{ ${token} }}: ${value}`);
         content = content.replace(new RegExp(`\\{\\{\\s*${token}\\s*\\}\\}`, 'g'), value);
       }
-
-      // prepend update header
-      if (inputs.updateHeader !== false && typeof inputs.updateHeader === 'string') {
-        content = `${inputs.updateHeader}${content}`;
-      }
       core.endGroup();
 
       // debug and update the file with new contents
-      core.debug(`updated ${file} with new contents:`);
+      fs.writeFileSync(file, content);
+      core.debug(`updated ${file} with tokens:`);
       core.debug(`${fs.readFileSync(file, {encoding: 'utf-8'})}`);
+    }
+
+    // loop through and update-files with header
+    if (inputs.updateHeader !== false && typeof inputs.updateHeader === 'string') {
+      for (const file of inputs.updateFiles.filter(file => fs.existsSync(file))) {
+        core.startGroup(`Updating ${file} with update-files-header content`);
+        core.info(`update-header: ${inputs.updateHeader}`);
+        core.endGroup();
+
+        const content = fs.readFileSync(file, {encoding: 'utf-8'});
+        fs.writeFileSync(file, `${inputs.updateHeader}${content}`);
+
+        core.debug(`updated ${file} with update-header:`);
+        core.debug(`${fs.readFileSync(file, {encoding: 'utf-8'})}`);
+      }
     }
 
     // if using landoPlugin ez-mode then validate lando plugin
