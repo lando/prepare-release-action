@@ -51,3 +51,11 @@ jobs:
             v99
           sync-token: ${{ secrets.RTFM47_COAXIUM_INJECTOR }}
           sync-username: William T. Riker
+          update-files: CHANGELOG.md
+          update-files-header: |
+            ## {{ UNRELEASED_VERSION }} - [{{ UNRELEASED_DATE }}]({{ UNRELEASED_LINK }})
+
+          update-files-meta: |
+            UNRELEASED_DATE=May 4, 3000
+            UNRELEASED_LINK=${{ github.repositoryUrl }}
+            UNRELEASED_VERSION=v${{ github.run_id }}.${{ github.run_number }}.${{ github.run_attempt}}-build.${{ github.sha }}

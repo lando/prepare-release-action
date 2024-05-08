@@ -24,7 +24,7 @@ inputs:
     required: false
     default: false
   meta:
-    description: " A list of path=value strings to merge into the package.json"
+    description: "A list of path=value strings to merge into the package.json"
     required: false
   root:
     description: "The location of the code being prepared for release."
@@ -57,6 +57,15 @@ inputs:
     description: "The username to use when syncing changes back to the repo."
     required: false
     default: "github-actions[bot]"
+  update-files:
+    description: "The files to operate on with update-files-meta."
+    required: false
+  update-files-header:
+    description: "A header to prepend to update-files after they've been operated on."
+    required: false
+  update-files-meta:
+    description: "The find/replace metadata to be used when updating update-files."
+    required: false
   version-match:
     description: "A regex to help find the latest tag. Only used when version=dev."
     required: false
