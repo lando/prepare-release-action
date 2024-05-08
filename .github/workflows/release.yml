@@ -32,6 +32,10 @@ jobs:
           npm clean-install
           npm run lint
           npm run prepare
+      - name: Export release date
+        run: |
+          date -d "2013-02-27T19:35:32Z" "+%B%e, %Y"
+          echo "RELEASE_DATE=$(date "+%B%e, %Y")" >> $GITHUB_ENV
       - name: Prepare release
         uses: ./
         with:
@@ -43,8 +47,7 @@ jobs:
           update-files: CHANGELOG.md
           update-files-header: |
             ## {{ UNRELEASED_VERSION }} - [{{ UNRELEASED_DATE }}]({{ UNRELEASED_LINK }})
-
           update-files-meta: |
-            UNRELEASED_DATE=${{ github.event.release.published_at }}
+            UNRELEASED_DATE=${{ env.RELEASE_DATE }}
             UNRELEASED_LINK=${{ github.event.release.html_url }}
             UNRELEASED_VERSION=${{ github.event.release.tag_name }}

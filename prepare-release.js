@@ -63,7 +63,7 @@ const main = async () => {
     }
     // if lando plugin and updateHeader is not set then set it here
     if (inputs.landoPlugin && inputs.updateHeader !== false && typeof inputs.updateHeader === 'string') {
-      inputs.updateHeader = '## {{ UNRELEASED_VERSION }} - [{{ UNRELEASED_DATE }}]({{ UNRELEASED_LINK }})\n\n';
+      inputs.updateHeader = ['## {{ UNRELEASED_VERSION }} - [{{ UNRELEASED_DATE }}]({{ UNRELEASED_LINK }})', '\n', '\n'];
     }
 
     // normalize updatefile paths
