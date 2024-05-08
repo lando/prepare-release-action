@@ -1,4 +1,4 @@
-## {{ UNRELEASED_VERSION }} - [{{ UNRELEASED_DATE }}]({{ UNRELEASED_LINK }})
+## {{ UNRELEASED_VERSION }} - [{{ UNRELEASED_DATE }}]({{ UNRELEASED_LINK }})## v9006866776.34.1-build.61fff76efc218ca3d4b9bac26b23573eb8fa6e2a - [May 8, 2024](git://github.com/lando/prepare-release-action.git)
 
 * Fixed issue with `update-files-header` newline spacing
 * Fixed issue with this repos GHA release dates
