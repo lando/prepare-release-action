@@ -40,6 +40,8 @@ jobs:
           npm run prepare
       - name: Prepare release
         uses: ./
+        env:
+          RUNNER_DEBUG: 1
         with:
           bundle-dependencies: ${{ matrix.bundle-dependencies }}
           commands: npm run prepare
