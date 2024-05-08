@@ -1,4 +1,25 @@
-## v9006447102.29.1-build.7b3e2cddbcdd9248c63fc3956bb4282702d98c46 - [May 8, 2024](git://github.com/lando/prepare-release-action.git)## v9005187103.28.1-build.6ecae00b9b8006b2e0a49db1b567af397be51f78 - [May 4, 3000](git://github.com/lando/prepare-release-action.git)## v9005063216.27.2-build.5f2502cb93f805dcb6ec78becae81819ba0dd680 - [May 4, 3000](git://github.com/lando/prepare-release-action.git)## v3.1.0 - [December 6, 2023](https://github.com/lando/prepare-release-action/releases/tag/v3.1.0)
+## {{ UNRELEASED_VERSION }} - [{{ UNRELEASED_DATE }}]({{ UNRELEASED_LINK }})
+
+* Fixed issue with `update-files-header` newline spacing
+* Fixed issue with this repos GHA release dates
+
+## v3.3.0 - [May 8, 2024](https://github.com/lando/prepare-release-action/releases/tag/v3.3.0)
+
+* Added `update-files`, `update-files-meta` and `update-files-header` inputs to help things like automatic `CHANGELOG.md` automation [#15](https://github.com/lando/prepare-release-action/issues/15)
+
+## v3.2.2 - [March 26, 2024](https://github.com/lando/prepare-release-action/releases/tag/v3.2.2)
+
+* This release has no content and is to test DevOps things
+
+## v3.2.1 - [March 26, 2024](https://github.com/lando/prepare-release-action/releases/tag/v3.2.1)
+
+* This release has no content and is to test DevOps things
+
+## v3.2.0 - [March 26, 2024](https://github.com/lando/prepare-release-action/releases/tag/v3.2.0)
+
+* Added a `sync-token` input to better control `git` sync operations
+
+## v3.1.0 - [December 6, 2023](https://github.com/lando/prepare-release-action/releases/tag/v3.1.0)
 
 * Added a `meta` input so users can enter a list of `path=value` strings to merge into the `package.json`
 * Improved `lando-plugin` so that it adds the needed `dist` value to the `package.json`
