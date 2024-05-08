@@ -5,9 +5,12 @@ const exec = require('@actions/exec');
 const fs = require('fs');
 const getInputs = require('./utils/get-inputs');
 const getStdOut = require('./utils/get-stdout');
+const github = require('@actions/github');
 const isLandoPlugin = require('./utils/is-lando-plugin');
 const jsonfile = require('jsonfile');
 const path = require('path');
+const parseReleaseDate = require('./utils/parse-release-date');
+const parseTokens = require('./utils/parse-tokens');
 const semverClean = require('semver/functions/clean');
 const semverValid = require('semver/functions/valid');
 const set = require('lodash.set');
@@ -15,11 +18,13 @@ const set = require('lodash.set');
 const main = async () => {
   // start by getting the inputs
   const inputs = getInputs();
+
   // switch cwd to inputs.root
   process.chdir(inputs.root);
 
   // add more
   inputs.pjson = path.join(inputs.root, 'package.json');
+  inputs.release = github?.context?.payload?.release;
 
   try {
     // get status of shallowness
@@ -42,8 +47,29 @@ const main = async () => {
     if (semverValid(semverClean(inputs.version)) === null) throw new Error(`Version ${inputs.version} must be semver valid!`);
     // and that we have a package.json
     if (!fs.existsSync(inputs.pjson)) throw new Error(`Could not detect a package.json in ${inputs.root}`);
-    // if bundle-deps is false but lando-plugin is try then really bundle-deps is also true
+
+    // if bundle-deps is false but lando-plugin is true then really bundle-deps is also true
     if (!inputs.bundleDependencies && inputs.landoPlugin) inputs.bundleDependencies = true;
+    // if update-files is empty but lando-plugin is true then set changelog.md
+    if (inputs.updateFiles.length === 0 && inputs.landoPlugin) inputs.updateFiles = ['CHANGELOG', 'CHANGELOG.md'];
+    // if lando-plugin is true and this is a release then add update meta to the end
+    // @NOTE: adding to the end means any same-named user-provided metadata will win
+    if (inputs.landoPlugin && inputs.release) {
+      inputs.tokens.push(...[
+        `UNRELEASED_DATE=${parseReleaseDate(inputs.release.published_at)}`,
+        `UNRELEASED_LINK=${inputs.release.html_url}`,
+        `UNRELEASED_VERSION=${inputs.release.tag_name}`,
+      ]);
+    }
+    // if lando plugin and updateHeader is not set then set it here
+    if (inputs.landoPlugin && inputs.updateHeader !== false && typeof inputs.updateHeader === 'string') {
+      inputs.updateHeader = '## {{ UNRELEASED_VERSION }} - [{{ UNRELEASED_DATE }}]({{ UNRELEASED_LINK }})\n\n';
+    }
+
+    // normalize updatefile paths
+    for (const [index, filename] of inputs.updateFiles.entries()) {
+      inputs.updateFiles[index] = path.isAbsolute(filename) ? file : path.resolve(inputs.root, filename);
+    }
 
     // add global utils, we do this regardless so we can invoke directly and control the version
     core.startGroup('Ensuring utils');
@@ -96,6 +122,29 @@ const main = async () => {
       jsonfile.writeFileSync(inputs.pjson, pjson, {spaces: 2});
       core.debug(`updated pjson`);
       core.debug(jsonfile.readFileSync(inputs.pjson));
+    }
+
+    // loop through and update-files with tokens
+    for (const file of inputs.updateFiles.filter(file => fs.existsSync(file))) {
+      // get content
+      let content = fs.readFileSync(file, {encoding: 'utf-8'});
+
+      // update its tokens
+      core.startGroup(`Updating ${file} with update-files-meta tokens`);
+      for (const [token, value] of parseTokens(inputs.tokens)) {
+        core.info(`{{ ${token} }}: ${value}`);
+        content = content.replace(new RegExp(`\\{\\{\\s*${token}\\s*\\}\\}`, 'g'), value);
+      }
+
+      // prepend update header
+      if (inputs.updateHeader !== false && typeof inputs.updateHeader === 'string') {
+        content = `${inputs.updateHeader}${content}`;
+      }
+      core.endGroup();
+
+      // debug and update the file with new contents
+      core.debug(`updated ${file} with new contents:`);
+      core.debug(`${fs.readFileSync(file, {encoding: 'utf-8'})}`);
     }
 
     // if using landoPlugin ez-mode then validate lando plugin

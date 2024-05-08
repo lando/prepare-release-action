@@ -41,7 +41,6 @@ jobs:
       - name: Prepare release
         uses: ./
         with:
-          version: ${{ matrix.version }}
           bundle-dependencies: ${{ matrix.bundle-dependencies }}
           commands: npm run prepare
           lando-plugin: ${{ matrix.lando-plugin }}
@@ -49,5 +48,12 @@ jobs:
             v2
             kirk-epsilon
           sync: false
+          version: ${{ matrix.version }}
+          update-files: CHANGELOG.md
+          update-files-header: |
+            ## {{ UNRELEASED_VERSION }} - [{{ UNRELEASED_DATE }}]({{ UNRELEASED_LINK }})
 
-
+          update-files-meta:
+            UNRELEASED_DATE=May 4, 3000
+            UNRELEASED_LINK=${{ github.repositoryUrl }}
+            UNRELEASED_VERSION=v${{ github.run_id }}.${{ github.run_number }}.${{ github.run_attempt}}=${{ github.sha }}

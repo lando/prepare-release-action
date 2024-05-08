@@ -1,3 +1,7 @@
+## {{ UNRELEASED_VERSION }} - [{{ UNRELEASED_DATE }}]({{ UNRELEASED_LINK }})
+
+* This release has no content and is to test DevOps things
+
 ## v3.2.2 - [March 26, 2024](https://github.com/lando/prepare-release-action/releases/tag/v3.2.2)
 
 * This release has no content and is to test DevOps things
