@@ -49,7 +49,6 @@ update-files-meta: |
 
 ## Caveats
 
-*
 * If your project is a shallow clone (as is the default for `@actions/checkout`) we will `--unshallow` it to a full clone in order to sync changes.
 * If you have [branch](https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/managing-protected-branches/managing-a-branch-protection-rule) or [tag protection](https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/managing-repository-settings/configuring-tag-protection-rules) turned on you will need to make sure your rules allow the `sync-token` user to both write to the `sync-branch` and `sync-tags` and to allow a `--force` alteration of the repos tags.
 
