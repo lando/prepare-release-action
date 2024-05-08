@@ -56,7 +56,6 @@ jobs:
           update-files: CHANGELOG.md
           update-files-header: |
             ## {{ UNRELEASED_VERSION }} - [{{ UNRELEASED_DATE }}]({{ UNRELEASED_LINK }})
-
           update-files-meta: |
             UNRELEASED_DATE=${{ env.RELEASE_DATE }}
             UNRELEASED_LINK=${{ github.repositoryUrl }}

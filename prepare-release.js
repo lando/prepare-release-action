@@ -64,7 +64,7 @@ const main = async () => {
     }
     // if lando plugin and updateHeader is not set then set it here
     if (inputs.landoPlugin && inputs.updateHeader.length === 0) {
-      inputs.updateHeader = ['## {{ UNRELEASED_VERSION }} - [{{ UNRELEASED_DATE }}]({{ UNRELEASED_LINK }})', '', ''];
+      inputs.updateHeader = ['## {{ UNRELEASED_VERSION }} - [{{ UNRELEASED_DATE }}]({{ UNRELEASED_LINK }})'];
     }
 
     // normalize updatefile paths
@@ -143,7 +143,7 @@ const main = async () => {
         core.startGroup(`Updating ${file} with update-files-header content`);
         core.info(`update-header: ${inputs.updateHeader.join(os.EOL)}`);
         core.endGroup();
-        content = `${inputs.updateHeader.join(os.EOL)}${content}`;
+        content = `${inputs.updateHeader.join(os.EOL)}${os.EOL}${os.EOL}${content}`;
       }
 
       // debug and update the file with new contents
