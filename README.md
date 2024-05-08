@@ -22,9 +22,9 @@ All inputs are optional however if you are **NOT** triggering this action on a `
 | `sync-tags` | A list of other tags to sync back to the repo. | `[]` | `v2` |
 | `sync-token` | A Personal Access Token to use for `git` sync ops. | `${{ github.token }}` | `${{ secrets.MY_PAT }}` |
 | `sync-username` | The username to use when syncing changes back to the repo. | `github-actions` | `w.t.riker` |
-| `update-files` | The username to use when syncing changes back to the repo. | `[]` | `CHANGELOG.md` |
-| `update-files-header` | The username to use when syncing changes back to the repo. | `false` | `{{ NEW VERSION }}` |
-| `update-files-meta` | The username to use when syncing changes back to the repo. | `[]` | `NEW_VERSION=${{ github.event.release.tag_name }}` |
+| `update-files` | The files to operate on with update-files-meta and update-files-header. | `[]` | `CHANGELOG.md` |
+| `update-files-header` | A header to prepend to update-files after they've been operated on. | `[]` | `{{ ## NEW VERSION }}` |
+| `update-files-meta` | The find/replace metadata to be used when updating update-files. | `[]` | `NEW_VERSION=${{ github.event.release.tag_name }}` |
 | `version-match` | A regex to help find the latest tag. Only used when `version=dev`. | `v[0-9].*` | `[1-2].*` |
 | `lando-plugin` | A special easy-mode setting to prepare and valdiate Lando plugins. | `false` | `true` |
 
