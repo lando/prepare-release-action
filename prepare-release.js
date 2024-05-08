@@ -143,7 +143,7 @@ const main = async () => {
         core.startGroup(`Updating ${file} with update-files-header content`);
         core.info(`update-header: ${inputs.updateHeader.join(os.EOL)}`);
         core.endGroup();
-        content = fs.readFileSync(file, {encoding: 'utf-8'});
+        content = `${inputs.updateHeader.join(os.EOL)}${content}`;
       }
 
       // debug and update the file with new contents
