@@ -33254,7 +33254,7 @@ module.exports = () => ({
   syncToken: core.getInput('sync-token') || process.env.GITHUB_TOKEN,
   syncUsername: core.getInput('sync-username') || 'github-actions',
   tokens: core.getMultilineInput('update-files-meta') ?? [],
-  updateHeader: core.getInput('update-files-header') ?? false,
+  updateHeader: core.getMultilineInput('update-files-header') ?? [],
   updateFiles: core.getMultilineInput('update-files') ?? [],
   versionMatch: core.getInput('version-match') || 'v[0-9].*',
 });
@@ -35247,6 +35247,7 @@ const getStdOut = __nccwpck_require__(1911);
 const github = __nccwpck_require__(5438);
 const isLandoPlugin = __nccwpck_require__(5776);
 const jsonfile = __nccwpck_require__(6160);
+const os = __nccwpck_require__(2037);
 const path = __nccwpck_require__(1017);
 const parseReleaseDate = __nccwpck_require__(3508);
 const parseTokens = __nccwpck_require__(9233);
@@ -35301,8 +35302,8 @@ const main = async () => {
       ]);
     }
     // if lando plugin and updateHeader is not set then set it here
-    if (inputs.landoPlugin && inputs.updateHeader !== false && typeof inputs.updateHeader === 'string') {
-      inputs.updateHeader = '## {{ UNRELEASED_VERSION }} - [{{ UNRELEASED_DATE }}]({{ UNRELEASED_LINK }})\n\n';
+    if (inputs.landoPlugin && inputs.updateHeader.length === 0) {
+      inputs.updateHeader = ['## {{ UNRELEASED_VERSION }} - [{{ UNRELEASED_DATE }}]({{ UNRELEASED_LINK }})'];
     }
 
     // normalize updatefile paths
@@ -35363,7 +35364,7 @@ const main = async () => {
       core.debug(jsonfile.readFileSync(inputs.pjson));
     }
 
-    // loop through and update-files with tokens
+    // loop through and update-files with tokens and headers
     for (const file of inputs.updateFiles.filter(file => fs.existsSync(file))) {
       // get content
       let content = fs.readFileSync(file, {encoding: 'utf-8'});
@@ -35376,25 +35377,20 @@ const main = async () => {
       }
       core.endGroup();
 
+      // update its header
+      if (inputs.updateHeader.length > 0) {
+        core.startGroup(`Updating ${file} with update-files-header content`);
+        core.info(`update-header: ${inputs.updateHeader.join(os.EOL)}`);
+        core.endGroup();
+        content = `${inputs.updateHeader.join(os.EOL)}${os.EOL}${os.EOL}${content}`;
+      }
+
       // debug and update the file with new contents
       fs.writeFileSync(file, content);
-      core.debug(`updated ${file} with tokens:`);
+      core.debug(`updated ${file}:`);
+      core.debug(`---`);
       core.debug(`${fs.readFileSync(file, {encoding: 'utf-8'})}`);
-    }
-
-    // loop through and update-files with header
-    if (inputs.updateHeader !== false && typeof inputs.updateHeader === 'string') {
-      for (const file of inputs.updateFiles.filter(file => fs.existsSync(file))) {
-        core.startGroup(`Updating ${file} with update-files-header content`);
-        core.info(`update-header: ${inputs.updateHeader}`);
-        core.endGroup();
-
-        const content = fs.readFileSync(file, {encoding: 'utf-8'});
-        fs.writeFileSync(file, `${inputs.updateHeader}${content}`);
-
-        core.debug(`updated ${file} with update-header:`);
-        core.debug(`${fs.readFileSync(file, {encoding: 'utf-8'})}`);
-      }
+      core.debug(`---`);
     }
 
     // if using landoPlugin ez-mode then validate lando plugin

@@ -1,5 +1,7 @@
 ## {{ UNRELEASED_VERSION }} - [{{ UNRELEASED_DATE }}]({{ UNRELEASED_LINK }})
 
+## v3.3.1 - [May 8, 2024](https://github.com/lando/prepare-release-action/releases/tag/v3.3.1)
+
 * Fixed issue with `update-files-header` newline spacing
 * Fixed issue with this repos GHA release dates
 
