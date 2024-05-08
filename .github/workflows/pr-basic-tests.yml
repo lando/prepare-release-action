@@ -43,6 +43,7 @@ jobs:
         env:
           RUNNER_DEBUG: 1
         with:
+          version: ${{ matrix.version }}
           bundle-dependencies: ${{ matrix.bundle-dependencies }}
           commands: npm run prepare
           lando-plugin: ${{ matrix.lando-plugin }}
@@ -50,7 +51,6 @@ jobs:
             v2
             kirk-epsilon
           sync: false
-          version: ${{ matrix.version }}
           update-files: CHANGELOG.md
           update-files-header: |
             ## {{ UNRELEASED_VERSION }} - [{{ UNRELEASED_DATE }}]({{ UNRELEASED_LINK }})
