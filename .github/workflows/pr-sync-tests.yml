@@ -32,8 +32,6 @@ jobs:
           path: test
       - name: Prepare release
         uses: ./
-        env:
-          RUNNER_DEBUG: 1
         with:
           version: dev
           commands: |

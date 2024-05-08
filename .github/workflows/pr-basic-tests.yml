@@ -40,8 +40,6 @@ jobs:
           npm run prepare
       - name: Prepare release
         uses: ./
-        env:
-          RUNNER_DEBUG: 1
         with:
           version: ${{ matrix.version }}
           bundle-dependencies: ${{ matrix.bundle-dependencies }}

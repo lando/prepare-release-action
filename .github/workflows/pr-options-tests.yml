@@ -32,8 +32,6 @@ jobs:
           npm run prepare
       - name: Prepare release
         uses: ./
-        env:
-          RUNNER_DEBUG: 1
         with:
           version: v5.0.0
           commands: |

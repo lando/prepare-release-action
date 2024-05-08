@@ -34,8 +34,22 @@ Also note that `sync-username` and `sync-email` are simply for `git config` purp
 
 Also also note that `bundle-dependencies` runs _after_ sync eg it will not push changes to `bundleDependencies` in your `package.json` back to your repo. It is intended to be used for packaging dependencies when publishing to a npm compatible package registry eg `npm` or `npm.pkg.github.com`.
 
+Also note that while `update-files-meta` is expressed as `KEY=VALUE` it must be wrapped with double brackets like `{{ KEY }}` in the relevant `update-files` for it to be properly tokenized/replaced. See our [CHANGELOG.md](https://github.com/lando/prepare-release-action/blob/main/CHANGELOG.md) for an example using the below inputs:
+
+```yaml
+update-files: CHANGELOG.md
+update-files-header: |
+  ## {{ UNRELEASED_VERSION }} - [{{ UNRELEASED_DATE }}]({{ UNRELEASED_LINK }})
+
+update-files-meta: |
+  UNRELEASED_DATE=May 4, 3000
+  UNRELEASED_LINK=${{ github.repositoryUrl }}
+  UNRELEASED_VERSION=v${{ github.run_id }}.${{ github.run_number }}.${{ github.run_attempt}}-build.${{ github.sha }}
+```
+
 ## Caveats
 
+*
 * If your project is a shallow clone (as is the default for `@actions/checkout`) we will `--unshallow` it to a full clone in order to sync changes.
 * If you have [branch](https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/managing-protected-branches/managing-a-branch-protection-rule) or [tag protection](https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/managing-repository-settings/configuring-tag-protection-rules) turned on you will need to make sure your rules allow the `sync-token` user to both write to the `sync-branch` and `sync-tags` and to allow a `--force` alteration of the repos tags.
 
@@ -95,6 +109,14 @@ Also also note that `bundle-dependencies` runs _after_ sync eg it will not push 
       number2
     sync-token: ${{ secrets.MY_PAT }}
     sync-username: w.t.riker
+    update-files: CHANGELOG.md
+    update-files-header: |
+      ## {{ UNRELEASED_VERSION }} - [{{ UNRELEASED_DATE }}]({{ UNRELEASED_LINK }})
+
+    update-files-meta: |
+      UNRELEASED_DATE=May 4, 3000
+      UNRELEASED_LINK=${{ github.repositoryUrl }}
+      UNRELEASED_VERSION=v${{ github.run_id }}.${{ github.run_number }}.${{ github.run_attempt}}-build.${{ github.sha }}
     version-match: "v[0-2].*"
 ```
 
