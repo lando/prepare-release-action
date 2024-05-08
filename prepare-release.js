@@ -8,6 +8,7 @@ const getStdOut = require('./utils/get-stdout');
 const github = require('@actions/github');
 const isLandoPlugin = require('./utils/is-lando-plugin');
 const jsonfile = require('jsonfile');
+const os = require('os');
 const path = require('path');
 const parseReleaseDate = require('./utils/parse-release-date');
 const parseTokens = require('./utils/parse-tokens');
@@ -62,7 +63,7 @@ const main = async () => {
       ]);
     }
     // if lando plugin and updateHeader is not set then set it here
-    if (inputs.landoPlugin && inputs.updateHeader !== false && typeof inputs.updateHeader === 'string') {
+    if (inputs.landoPlugin && inputs.updateHeader.length === 0) {
       inputs.updateHeader = ['## {{ UNRELEASED_VERSION }} - [{{ UNRELEASED_DATE }}]({{ UNRELEASED_LINK }})', '', ''];
     }
 
@@ -124,7 +125,7 @@ const main = async () => {
       core.debug(jsonfile.readFileSync(inputs.pjson));
     }
 
-    // loop through and update-files with tokens
+    // loop through and update-files with tokens and headers
     for (const file of inputs.updateFiles.filter(file => fs.existsSync(file))) {
       // get content
       let content = fs.readFileSync(file, {encoding: 'utf-8'});
@@ -137,25 +138,20 @@ const main = async () => {
       }
       core.endGroup();
 
+      // update its header
+      if (inputs.updateHeader.length > 0) {
+        core.startGroup(`Updating ${file} with update-files-header content`);
+        core.info(`update-header: ${inputs.updateHeader.join(os.EOL)}`);
+        core.endGroup();
+        content = fs.readFileSync(file, {encoding: 'utf-8'});
+      }
+
       // debug and update the file with new contents
       fs.writeFileSync(file, content);
-      core.debug(`updated ${file} with tokens:`);
+      core.debug(`updated ${file}:`);
+      core.debug(`---`);
       core.debug(`${fs.readFileSync(file, {encoding: 'utf-8'})}`);
-    }
-
-    // loop through and update-files with header
-    if (inputs.updateHeader !== false && typeof inputs.updateHeader === 'string') {
-      for (const file of inputs.updateFiles.filter(file => fs.existsSync(file))) {
-        core.startGroup(`Updating ${file} with update-files-header content`);
-        core.info(`update-header: ${inputs.updateHeader.join('\n')}`);
-        core.endGroup();
-
-        const content = fs.readFileSync(file, {encoding: 'utf-8'});
-        fs.writeFileSync(file, `${inputs.updateHeader.join('\n')}${content}`);
-
-        core.debug(`updated ${file} with update-header:`);
-        core.debug(`${fs.readFileSync(file, {encoding: 'utf-8'})}`);
-      }
+      core.debug(`---`);
     }
 
     // if using landoPlugin ez-mode then validate lando plugin

@@ -20,7 +20,7 @@ module.exports = () => ({
   syncToken: core.getInput('sync-token') || process.env.GITHUB_TOKEN,
   syncUsername: core.getInput('sync-username') || 'github-actions',
   tokens: core.getMultilineInput('update-files-meta') ?? [],
-  updateHeader: core.getMultilineInput('update-files-header') ?? false,
+  updateHeader: core.getMultilineInput('update-files-header') ?? [],
   updateFiles: core.getMultilineInput('update-files') ?? [],
   versionMatch: core.getInput('version-match') || 'v[0-9].*',
 });
