@@ -63,7 +63,7 @@ const main = async () => {
     }
     // if lando plugin and updateHeader is not set then set it here
     if (inputs.landoPlugin && inputs.updateHeader !== false && typeof inputs.updateHeader === 'string') {
-      inputs.updateHeader = ['## {{ UNRELEASED_VERSION }} - [{{ UNRELEASED_DATE }}]({{ UNRELEASED_LINK }})', '\n', '\n'];
+      inputs.updateHeader = ['## {{ UNRELEASED_VERSION }} - [{{ UNRELEASED_DATE }}]({{ UNRELEASED_LINK }})', '', ''];
     }
 
     // normalize updatefile paths
@@ -147,11 +147,11 @@ const main = async () => {
     if (inputs.updateHeader !== false && typeof inputs.updateHeader === 'string') {
       for (const file of inputs.updateFiles.filter(file => fs.existsSync(file))) {
         core.startGroup(`Updating ${file} with update-files-header content`);
-        core.info(`update-header: ${inputs.updateHeader}`);
+        core.info(`update-header: ${inputs.updateHeader.join('\n')}`);
         core.endGroup();
 
         const content = fs.readFileSync(file, {encoding: 'utf-8'});
-        fs.writeFileSync(file, `${inputs.updateHeader}${content}`);
+        fs.writeFileSync(file, `${inputs.updateHeader.join('\n')}${content}`);
 
         core.debug(`updated ${file} with update-header:`);
         core.debug(`${fs.readFileSync(file, {encoding: 'utf-8'})}`);

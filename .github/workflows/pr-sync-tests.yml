@@ -26,10 +26,8 @@ jobs:
         run: |
           npm clean-install
           npm run prepare
-      - name: Export release date
-        run: |
-          date -d "2013-02-27T19:35:32Z" "+%B%e, %Y"
-          echo "RELEASE_DATE=$(date "+%B%e, %Y")" >> $GITHUB_ENV
+      - name: Export formatted release date
+        run: echo "RELEASE_DATE=$(date "+%B %e, %Y")" >> $GITHUB_ENV
       - name: Checkout fresh repo for testing
         uses: actions/checkout@v3
         with:
