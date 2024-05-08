@@ -1,4 +1,4 @@
-## {{ UNRELEASED_VERSION }} - [{{ UNRELEASED_DATE }}]({{ UNRELEASED_LINK }})## v9005187103.28.1-build.6ecae00b9b8006b2e0a49db1b567af397be51f78 - [May 4, 3000](git://github.com/lando/prepare-release-action.git)## v9005063216.27.2-build.5f2502cb93f805dcb6ec78becae81819ba0dd680 - [May 4, 3000](git://github.com/lando/prepare-release-action.git)## v3.1.0 - [December 6, 2023](https://github.com/lando/prepare-release-action/releases/tag/v3.1.0)
+## v9006447102.29.1-build.7b3e2cddbcdd9248c63fc3956bb4282702d98c46 - [May 8, 2024](git://github.com/lando/prepare-release-action.git)## v9005187103.28.1-build.6ecae00b9b8006b2e0a49db1b567af397be51f78 - [May 4, 3000](git://github.com/lando/prepare-release-action.git)## v9005063216.27.2-build.5f2502cb93f805dcb6ec78becae81819ba0dd680 - [May 4, 3000](git://github.com/lando/prepare-release-action.git)## v3.1.0 - [December 6, 2023](https://github.com/lando/prepare-release-action/releases/tag/v3.1.0)
 
 * Added a `meta` input so users can enter a list of `path=value` strings to merge into the `package.json`
 * Improved `lando-plugin` so that it adds the needed `dist` value to the `package.json`
