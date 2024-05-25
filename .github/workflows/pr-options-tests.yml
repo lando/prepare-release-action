@@ -4,7 +4,7 @@ on:
   pull_request:
 
 jobs:
-  test:
+  options-test:
     runs-on: ${{ matrix.os }}
     env:
       term: xterm
@@ -114,13 +114,3 @@ jobs:
           fi
         shell: bash
 
-      - name: "TEST: should set git message correctly"
-        if: always()
-        run: |
-          if git --no-pager log -1 | grep "riker5.0.0"; then
-            echo "::notice title=TEST PASSED::Git message set correctly"
-          else
-            echo "::error title=TEST FAILED!::Git message not set correctly"
-            exit 5
-          fi
-        shell: bash

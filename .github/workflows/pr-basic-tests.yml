@@ -4,7 +4,7 @@ on:
   pull_request:
 
 jobs:
-  test:
+  basic-tests:
     runs-on: ${{ matrix.os }}
     env:
       term: xterm
