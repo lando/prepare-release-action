@@ -35400,7 +35400,7 @@ const main = async () => {
     }
 
     // bump version AND commit everything changed
-    await exec.exec(`${binDir}/bump`, [inputs.version, '--commit', inputs.syncMessage, '--all']);
+    await exec.exec(`${binDir}/bump`, inputs.sync ? [inputs.version, '--commit', inputs.syncMessage, '--all'] : [inputs.version]);
 
     // get helpful stuff, for some reasons windows interprets the format wrapping quptes literally?
     const currentCommit = getStdOut('git --no-pager log --pretty=format:%h -n 1');
