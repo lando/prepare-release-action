@@ -1,5 +1,7 @@
 ## {{ UNRELEASED_VERSION }} - [{{ UNRELEASED_DATE }}]({{ UNRELEASED_LINK }})
 
+* Fixed issue where `version: dev` would fail when it produces no `git` changes
+
 ## v3.3.1 - [May 8, 2024](https://github.com/lando/prepare-release-action/releases/tag/v3.3.1)
 
 * Fixed issue with `update-files-header` newline spacing
