@@ -1,5 +1,7 @@
 ## {{ UNRELEASED_VERSION }} - [{{ UNRELEASED_DATE }}]({{ UNRELEASED_LINK }})
 
+## v9235544234.37.1-build.5210e9868be865a725127f09079455a32a043d00 - [May 25, 2024](git://github.com/lando/prepare-release-action.git)
+
 ## v9235512721.36.1-build.b7813b3648fa71842ba711aae29429575114da72 - [May 25, 2024](git://github.com/lando/prepare-release-action.git)
 
 * Fixed issue with `update-files-header` newline spacing
