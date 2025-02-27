@@ -195,8 +195,16 @@ const main = async () => {
     // this happens AFTER sync because we ASSUME you do not have your node_modules checks into your repo
     // and if you do then this should be in your package.json already
     if (inputs.bundleDependencies) {
-      await exec.exec(`${binDir}/bundle-dependencies`, ['update']);
-      await exec.exec(`${binDir}/bundle-dependencies`, ['list-bundled-dependencies']);
+      // Check if there are dependencies to bundle
+      const pjson = jsonfile.readFileSync(inputs.pjson);
+      const hasDependencies = pjson.dependencies && Object.keys(pjson.dependencies).length > 0;
+
+      if (hasDependencies) {
+        await exec.exec(`${binDir}/bundle-dependencies`, ['update']);
+        await exec.exec(`${binDir}/bundle-dependencies`, ['list-bundled-dependencies']);
+      } else {
+        core.info('No dependencies found in package.json, skipping bundle-dependencies step');
+      }
     }
 
     // lets also add the "dist" information, this key is required if you want the plugin to be updateable
