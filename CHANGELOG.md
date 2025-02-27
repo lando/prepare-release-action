@@ -1,5 +1,7 @@
 ## {{ UNRELEASED_VERSION }} - [{{ UNRELEASED_DATE }}]({{ UNRELEASED_LINK }})
 
+* Fixed issue where `bundle-dependencies` would fail when no dependencies are found in `package.json`
+
 ## v3.3.2 - [May 25, 2024](https://github.com/lando/prepare-release-action/releases/tag/v3.3.2)
 
 * Fixed issue where `version: dev` would fail when it produces no `git` changes
