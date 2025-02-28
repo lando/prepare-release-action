@@ -6,6 +6,7 @@ const fs = require('fs');
 const getInputs = require('./utils/get-inputs');
 const getStdOut = require('./utils/get-stdout');
 const github = require('@actions/github');
+const hasDependencies = require('./utils/has-dependencies');
 const isLandoPlugin = require('./utils/is-lando-plugin');
 const jsonfile = require('jsonfile');
 const os = require('os');
@@ -194,17 +195,9 @@ const main = async () => {
     //
     // this happens AFTER sync because we ASSUME you do not have your node_modules checks into your repo
     // and if you do then this should be in your package.json already
-    if (inputs.bundleDependencies) {
-      // Check if there are dependencies to bundle
-      const pjson = jsonfile.readFileSync(inputs.pjson);
-      const hasDependencies = pjson.dependencies && Object.keys(pjson.dependencies).length > 0;
-
-      if (hasDependencies) {
-        await exec.exec(`${binDir}/bundle-dependencies`, ['update']);
-        await exec.exec(`${binDir}/bundle-dependencies`, ['list-bundled-dependencies']);
-      } else {
-        core.info('No dependencies found in package.json, skipping bundle-dependencies step');
-      }
+    if (inputs.bundleDependencies && hasDependencies(inputs.pjson)) {
+      await exec.exec(`${binDir}/bundle-dependencies`, ['update']);
+      await exec.exec(`${binDir}/bundle-dependencies`, ['list-bundled-dependencies']);
     }
 
     // lets also add the "dist" information, this key is required if you want the plugin to be updateable
