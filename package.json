@@ -6,7 +6,7 @@
     "Alec Reynolds @reynoldsalec",
     "Mike Pirog @pirog"
   ],
-  "license": "GPL-3.0",
+  "license": "MIT",
   "repository": "https://github.com/lando/prepare-release-action",
   "bugs": "https://github.com/lando/prepare-release-action/issues",
   "homepage": "https://github.com/lando/prepare-release-action",
