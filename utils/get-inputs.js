@@ -9,6 +9,7 @@ module.exports = () => ({
   // optional inputs
   bundleDependencies: process.env.GITHUB_ACTIONS ? core.getBooleanInput('bundle-dependencies') : false,
   commands: core.getMultilineInput('commands'),
+  credFiles: [],
   landoPlugin: process.env.GITHUB_ACTIONS ? core.getBooleanInput('lando-plugin') : false,
   meta: core.getMultilineInput('meta'),
   root: core.getInput('root') || process.cwd(),

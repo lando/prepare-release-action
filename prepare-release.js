@@ -7,6 +7,7 @@ const getInputs = require('./utils/get-inputs');
 const getStdOut = require('./utils/get-stdout');
 const github = require('@actions/github');
 const hasDependencies = require('./utils/has-dependencies');
+const hideCredentialFiles = require('./utils/hide-credentials');
 const isLandoPlugin = require('./utils/is-lando-plugin');
 const jsonfile = require('jsonfile');
 const os = require('os');
@@ -16,6 +17,7 @@ const parseTokens = require('./utils/parse-tokens');
 const semverClean = require('semver/functions/clean');
 const semverValid = require('semver/functions/valid');
 const set = require('lodash.set');
+const restoreCredentialFiles = require('./utils/restore-credentials');
 
 const main = async () => {
   // start by getting the inputs
@@ -180,6 +182,9 @@ const main = async () => {
       await exec.exec('git', ['diff', 'HEAD~1']);
       core.endGroup();
 
+      // if using actions/checkout@v6 we need to temporarily move credential files
+      inputs.credFiles = await hideCredentialFiles();
+
       // construct auth string
       const basicCredential = Buffer.from(`x-access-token:${inputs.syncToken}`, 'utf8').toString('base64');
       const authString = `AUTHORIZATION: basic ${basicCredential}`;
@@ -189,6 +194,11 @@ const main = async () => {
       await exec.exec('git', ['config', '--local', 'http.https://github.com/.extraheader', authString]);
       await exec.exec('git', ['push', 'origin', inputs.syncBranch]);
       for (const tag of tags) await exec.exec('git', ['push', '--force', 'origin', tag]);
+
+      // restore credentials if needed
+      if (Array.isArray(inputs.credFiles) && inputs.credFiles.length > 0) {
+        inputs.credFiles = await restoreCredentialFiles(inputs.credFiles);
+      }
     }
 
     // bundle deps if we need to

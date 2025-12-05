@@ -60,3 +60,7 @@ jobs:
             UNRELEASED_DATE=${{ env.RELEASE_DATE }}
             UNRELEASED_LINK=${{ github.repositoryUrl }}
             UNRELEASED_VERSION=v${{ github.run_id }}.${{ github.run_number }}.${{ github.run_attempt}}-build.${{ github.sha }}
+      - name: Checkout again to validate credential restoration
+        uses: actions/checkout@v6
+        with:
+          path: cred-me
