@@ -10,7 +10,7 @@ module.exports = async (files = []) => {
       const src = backup.replace(/\.bak$/, '');
       await fs.promises.rename(backup, src);
       const file = path.basename(src);
-      core.info(`Restored checkout credential file: ${file}`);
+      core.info(`Restored actions/checkout credential file ${file}`);
     } catch (e) {
       core.warning(`Failed to restore credential file ${backup}: ${e.message}`);
     }
