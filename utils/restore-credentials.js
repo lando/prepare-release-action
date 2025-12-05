@@ -2,6 +2,7 @@
 
 const core = require('@actions/core');
 const fs = require('fs');
+const path = require('path');
 
 module.exports = async (files = []) => {
   for (const backup of files) {
