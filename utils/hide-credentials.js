@@ -27,7 +27,7 @@ module.exports = async (collector = []) => {
     core.debug(`Could not backup credential files: ${e.message}`);
   }
 
-  console.log(await fs.promises.readdir(runnerTemp))
+  console.log(await fs.promises.readdir(runnerTemp));
 
   return collector;
 };
