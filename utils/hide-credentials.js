@@ -12,6 +12,7 @@ module.exports = async (files = []) => {
   // attempt to rename all cred files
   try {
     const files = await fs.promises.readdir(runnerTemp);
+    console.log('hi', files);
     for (const file of files) {
       if (file.startsWith('git-credentials-') && file.endsWith('.config')) {
         const src = path.join(runnerTemp, file);

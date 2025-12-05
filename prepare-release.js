@@ -183,7 +183,9 @@ const main = async () => {
       core.endGroup();
 
       // if using actions/checkout@v6 we need to temporarily move credential files
+      core.info(`hello there`);
       inputs.credFiles = await hideCredentialFiles();
+      core.info(inputs.credFiles);
 
       // construct auth string
       const basicCredential = Buffer.from(`x-access-token:${inputs.syncToken}`, 'utf8').toString('base64');
