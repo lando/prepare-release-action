@@ -25,5 +25,5 @@ module.exports = async (collector = []) => {
     core.debug(`Could not backup credential files: ${e.message}`);
   }
 
-  return files;
+  return collector;
 };
