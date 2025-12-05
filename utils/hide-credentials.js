@@ -3,11 +3,11 @@
 const core = require('@actions/core');
 const fs = require('fs');
 
-module.exports = async (files = []) => {
+module.exports = async (collector = []) => {
   const runnerTemp = process.env['RUNNER_TEMP'];
 
   // bail if not on GHA
-  if (!runnerTemp) return files;
+  if (!runnerTemp) return collector;
 
   // attempt to rename all cred files
   try {
@@ -17,7 +17,7 @@ module.exports = async (files = []) => {
         const src = path.join(runnerTemp, file);
         const backup = `${src}.bak`;
         await fs.promises.rename(src, backup);
-        files.push(backup);
+        collector.push(backup);
         core.info(`Temporarily hiding checkout credential file: ${file} (will be restored after)`);
       }
     }
