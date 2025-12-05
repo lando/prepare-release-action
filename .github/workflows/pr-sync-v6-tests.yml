@@ -1,0 +1,62 @@
+name: Sync Tests (v6)
+
+on:
+  pull_request:
+
+jobs:
+  sync-tests:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os:
+          - ubuntu-24.04
+        node-version:
+          - '20'
+
+    steps:
+      # Install deps and cache
+      - name: Checkout code
+        uses: actions/checkout@v6
+      - name: Install node ${{ matrix.node-version }}
+        uses: actions/setup-node@v6
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: npm
+      - name: Install deps and prep
+        run: |
+          npm clean-install
+          npm run prepare
+      - name: Export formatted release date
+        run: echo "RELEASE_DATE=$(date "+%B %e, %Y" | tr -s ' ')" >> $GITHUB_ENV
+      - name: Checkout fresh repo for testing
+        uses: actions/checkout@v6
+        with:
+          path: test
+      - name: Prepare release
+        uses: ./
+        with:
+          version: dev
+          commands: |
+            touch riker
+            touch picard
+          lando-plugin: false
+          meta: |
+            jazzman=William T. Riker
+            bosmang=Picard
+          root: ${{ github.workspace }}/test
+          sync: true
+          sync-branch: test
+          sync-email: william.t.riker@starfleet.mil
+          sync-message: riker
+          sync-tags: |
+            number1
+            v99
+          sync-token: ${{ secrets.RTFM47_COAXIUM_INJECTOR }}
+          sync-username: William T. Riker
+          update-files: CHANGELOG.md
+          update-files-header: |
+            ## {{ UNRELEASED_VERSION }} - [{{ UNRELEASED_DATE }}]({{ UNRELEASED_LINK }})
+          update-files-meta: |
+            UNRELEASED_DATE=${{ env.RELEASE_DATE }}
+            UNRELEASED_LINK=${{ github.repositoryUrl }}
+            UNRELEASED_VERSION=v${{ github.run_id }}.${{ github.run_number }}.${{ github.run_attempt}}-build.${{ github.sha }}

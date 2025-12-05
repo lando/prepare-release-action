@@ -1,4 +1,4 @@
-name: Sync Tests
+name: Sync Tests (v4)
 
 on:
   pull_request:
@@ -10,17 +10,13 @@ jobs:
       matrix:
         os:
           - ubuntu-24.04
-        checkout-version:
-          - 'v4'
-          - 'v5'
-          - 'v6'
         node-version:
           - '20'
 
     steps:
       # Install deps and cache
       - name: Checkout code
-        uses: actions/checkout@${{ matrix.checkout-version }}
+        uses: actions/checkout@v4
       - name: Install node ${{ matrix.node-version }}
         uses: actions/setup-node@v6
         with:
@@ -33,7 +29,7 @@ jobs:
       - name: Export formatted release date
         run: echo "RELEASE_DATE=$(date "+%B %e, %Y" | tr -s ' ')" >> $GITHUB_ENV
       - name: Checkout fresh repo for testing
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           path: test
       - name: Prepare release
