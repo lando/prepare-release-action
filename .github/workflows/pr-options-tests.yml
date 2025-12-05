@@ -14,15 +14,15 @@ jobs:
         os:
           - windows-2022
           - ubuntu-24.04
-          - macos-14
+          - macos-15
         node-version:
           - '20'
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v6
       - name: Install node ${{ matrix.node-version }}
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v6
         with:
           node-version: ${{ matrix.node-version }}
           cache: npm
