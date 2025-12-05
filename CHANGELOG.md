@@ -1,5 +1,7 @@
 ## {{ UNRELEASED_VERSION }} - [{{ UNRELEASED_DATE }}]({{ UNRELEASED_LINK }})
 
+## v19977805262.8.1-build.8b015b2f61823be6d7bd8540d98d4ce00db2d617 - [December 5, 2025](git://github.com/lando/prepare-release-action.git)
+
 ## v19977797828.7.1-build.e1300b4e5121e43847a406f7583cbef8ef569d7a - [December 5, 2025](git://github.com/lando/prepare-release-action.git)
 
 ## v19977759974.6.1-build.ae805b6c073d7ad01cb13775508c306fa937a611 - [December 5, 2025](git://github.com/lando/prepare-release-action.git)

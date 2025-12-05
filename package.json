@@ -1,6 +1,6 @@
 {
   "name": "@lando/prepare-release-action",
-  "version": "3.3.3-16-ge130",
+  "version": "3.3.3-17-g8b01",
   "description": "An action that can automate release steps and sync them back to the releasing repo.",
   "contributors": [
     "Alec Reynolds @reynoldsalec",
