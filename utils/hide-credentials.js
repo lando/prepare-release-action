@@ -16,14 +16,18 @@ module.exports = async (collector = []) => {
       if (file.startsWith('git-credentials-') && file.endsWith('.config')) {
         const src = path.join(runnerTemp, file);
         const backup = `${src}.bak`;
+        console.log(src, backup);
         await fs.promises.rename(src, backup);
         collector.push(backup);
         core.info(`Temporarily hiding checkout credential file: ${file} (will be restored after)`);
       }
     }
   } catch (e) {
+    console.log(e);
     core.debug(`Could not backup credential files: ${e.message}`);
   }
+
+  console.log(await fs.promises.readdir(runnerTemp))
 
   return collector;
 };
