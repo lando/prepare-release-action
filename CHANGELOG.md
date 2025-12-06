@@ -1,5 +1,7 @@
 ## {{ UNRELEASED_VERSION }} - [{{ UNRELEASED_DATE }}]({{ UNRELEASED_LINK }})
 
+## v3.3.4 - [December 6, 2025](https://github.com/lando/prepare-release-action/releases/tag/v3.3.4)
+
 * Added compatibility with `actions/checkout@v6`. See [this](https://github.com/actions/checkout/issues/2299) for more info.
 
 ## v3.3.3 - [February 28, 2025](https://github.com/lando/prepare-release-action/releases/tag/v3.3.3)

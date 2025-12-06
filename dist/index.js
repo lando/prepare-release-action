@@ -32811,6 +32811,7 @@ module.exports = () => ({
   // optional inputs
   bundleDependencies: process.env.GITHUB_ACTIONS ? core.getBooleanInput('bundle-dependencies') : false,
   commands: core.getMultilineInput('commands'),
+  credFiles: [],
   landoPlugin: process.env.GITHUB_ACTIONS ? core.getBooleanInput('lando-plugin') : false,
   meta: core.getMultilineInput('meta'),
   root: core.getInput('root') || process.cwd(),
@@ -32874,6 +32875,44 @@ module.exports = pjson => {
 
 /***/ }),
 
+/***/ 6339:
+/***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
+
+"use strict";
+
+
+const core = __nccwpck_require__(7484);
+const fs = __nccwpck_require__(9896);
+const path = __nccwpck_require__(6928);
+
+module.exports = async (collector = []) => {
+  const runnerTemp = process.env['RUNNER_TEMP'];
+
+  // bail if not on GHA
+  if (!runnerTemp) return collector;
+
+  // attempt to rename all cred files
+  try {
+    const files = await fs.promises.readdir(runnerTemp);
+    for (const file of files) {
+      if (file.startsWith('git-credentials-') && file.endsWith('.config')) {
+        const src = path.join(runnerTemp, file);
+        const backup = `${src}.bak`;
+        await fs.promises.rename(src, backup);
+        collector.push(backup);
+        core.info(`Temporarily hiding actions/checkout credential file ${file} in favor of our auth`);
+      }
+    }
+  } catch (e) {
+    core.debug(`Could not backup credential files: ${e.message}`);
+  }
+
+  return collector;
+};
+
+
+/***/ }),
+
 /***/ 6275:
 /***/ ((module) => {
 
@@ -32915,6 +32954,34 @@ module.exports = tokens => {
   return tokens.map(token => token.split('='))
     .filter(([token, value]) => typeof token === 'string' && typeof value === 'string')
     .map(([token, value]) => ([token.trim(), value.trim()]));
+};
+
+
+/***/ }),
+
+/***/ 267:
+/***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
+
+"use strict";
+
+
+const core = __nccwpck_require__(7484);
+const fs = __nccwpck_require__(9896);
+const path = __nccwpck_require__(6928);
+
+module.exports = async (files = []) => {
+  for (const backup of files) {
+    try {
+      const src = backup.replace(/\.bak$/, '');
+      await fs.promises.rename(backup, src);
+      const file = path.basename(src);
+      core.info(`Restored actions/checkout credential file ${file}`);
+    } catch (e) {
+      core.warning(`Failed to restore credential file ${backup}: ${e.message}`);
+    }
+  }
+
+  return [];
 };
 
 
@@ -34852,6 +34919,7 @@ const getInputs = __nccwpck_require__(3926);
 const getStdOut = __nccwpck_require__(6216);
 const github = __nccwpck_require__(3228);
 const hasDependencies = __nccwpck_require__(6082);
+const hideCredentialFiles = __nccwpck_require__(6339);
 const isLandoPlugin = __nccwpck_require__(6275);
 const jsonfile = __nccwpck_require__(2064);
 const os = __nccwpck_require__(857);
@@ -34861,6 +34929,7 @@ const parseTokens = __nccwpck_require__(6340);
 const semverClean = __nccwpck_require__(1799);
 const semverValid = __nccwpck_require__(8780);
 const set = __nccwpck_require__(8203);
+const restoreCredentialFiles = __nccwpck_require__(267);
 
 const main = async () => {
   // start by getting the inputs
@@ -35025,6 +35094,9 @@ const main = async () => {
       await exec.exec('git', ['diff', 'HEAD~1']);
       core.endGroup();
 
+      // if using actions/checkout@v6 we need to temporarily move credential files
+      inputs.credFiles = await hideCredentialFiles();
+
       // construct auth string
       const basicCredential = Buffer.from(`x-access-token:${inputs.syncToken}`, 'utf8').toString('base64');
       const authString = `AUTHORIZATION: basic ${basicCredential}`;
@@ -35034,6 +35106,11 @@ const main = async () => {
       await exec.exec('git', ['config', '--local', 'http.https://github.com/.extraheader', authString]);
       await exec.exec('git', ['push', 'origin', inputs.syncBranch]);
       for (const tag of tags) await exec.exec('git', ['push', '--force', 'origin', tag]);
+
+      // restore credentials if needed
+      if (Array.isArray(inputs.credFiles) && inputs.credFiles.length > 0) {
+        inputs.credFiles = await restoreCredentialFiles(inputs.credFiles);
+      }
     }
 
     // bundle deps if we need to
