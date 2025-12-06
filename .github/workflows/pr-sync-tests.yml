@@ -16,9 +16,9 @@ jobs:
     steps:
       # Install deps and cache
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v6
       - name: Install node ${{ matrix.node-version }}
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v6
         with:
           node-version: ${{ matrix.node-version }}
           cache: npm
@@ -29,7 +29,7 @@ jobs:
       - name: Export formatted release date
         run: echo "RELEASE_DATE=$(date "+%B %e, %Y" | tr -s ' ')" >> $GITHUB_ENV
       - name: Checkout fresh repo for testing
-        uses: actions/checkout@v3
+        uses: actions/checkout@v6
         with:
           path: test
       - name: Prepare release
@@ -60,3 +60,7 @@ jobs:
             UNRELEASED_DATE=${{ env.RELEASE_DATE }}
             UNRELEASED_LINK=${{ github.repositoryUrl }}
             UNRELEASED_VERSION=v${{ github.run_id }}.${{ github.run_number }}.${{ github.run_attempt}}-build.${{ github.sha }}
+      - name: Checkout again to validate credential restoration
+        uses: actions/checkout@v6
+        with:
+          path: cred-me
